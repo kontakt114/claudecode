@@ -80,12 +80,12 @@
 
   /* Sticky CTA */
   .sticky-cta{
-    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    position:fixed;left:0;right:0;top:0;z-index:50;
     display:flex;align-items:center;justify-content:center;gap:18px;
     background:rgba(10,10,12,.85);backdrop-filter:blur(10px);
-    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
     padding:14px 24px;
-    transform:translateY(110%);transition:transform .35s ease;
+    transform:translateY(-110%);transition:transform .35s ease;
   }
   .sticky-cta.show{transform:translateY(0)}
   .sticky-cta span{color:var(--ink-soft);font-size:.92rem;display:none}
@@ -491,12 +491,12 @@
   });
 
   const stickyCta = document.getElementById('sticky-cta');
-  const hero = document.querySelector('.hero');
+  const heroCta = document.querySelector('.hero .btn');
   const finalSection = document.getElementById('termin');
   window.addEventListener('scroll', () => {
-    const pastHero = window.scrollY > hero.offsetHeight;
+    const pastHeroCta = window.scrollY > heroCta.offsetTop + heroCta.offsetHeight;
     const reachedFinal = window.scrollY + window.innerHeight > finalSection.offsetTop;
-    stickyCta.classList.toggle('show', pastHero && !reachedFinal);
+    stickyCta.classList.toggle('show', pastHeroCta && !reachedFinal);
   });
 
   window.addEventListener('mousemove', (e) => {
