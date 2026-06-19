@@ -41,7 +41,13 @@
   section{padding:120px 0;position:relative}
   h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:0.01em;line-height:1.18;color:var(--ink)}
   h1{font-size:clamp(2.3rem,4.6vw,3.4rem)}
-  h2{font-size:clamp(1.9rem,3.6vw,2.7rem);text-align:center}
+  h2{font-size:clamp(1.9rem,3.6vw,2.7rem);text-align:center;position:relative;padding-bottom:22px}
+  h2::after{
+    content:'';position:absolute;left:50%;bottom:0;
+    width:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);
+    transform:translateX(-50%);transition:width 1s ease .2s;
+  }
+  h2.is-visible::after{width:120px}
   h3{font-weight:700}
   p.lead{font-size:1.15rem;color:var(--ink-soft)}
   .eyebrow{
@@ -62,6 +68,31 @@
   }
   .btn:hover{transform:translateY(-2px);box-shadow:0 20px 42px -12px rgba(212,175,106,.55)}
   .center{text-align:center}
+
+  /* Cursor glow */
+  #cursor-glow{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%), rgba(212,175,106,.10), transparent 70%);
+    transition:background .15s ease-out;
+  }
+  body > *:not(#cursor-glow){position:relative;z-index:1}
+
+  /* Sticky CTA */
+  .sticky-cta{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    display:flex;align-items:center;justify-content:center;gap:18px;
+    background:rgba(10,10,12,.85);backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);
+    padding:14px 24px;
+    transform:translateY(110%);transition:transform .35s ease;
+  }
+  .sticky-cta.show{transform:translateY(0)}
+  .sticky-cta span{color:var(--ink-soft);font-size:.92rem;display:none}
+  .sticky-cta .btn{padding:13px 28px;font-size:.92rem}
+  @media (min-width:560px){.sticky-cta span{display:inline}}
+
+  /* Animated counters */
+  .counter{color:var(--accent-bright);font-weight:700}
 
   /* Header */
   header{padding:30px 0;border-bottom:1px solid var(--line)}
@@ -115,6 +146,11 @@
   .t-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px;margin-top:56px}
   .t-card{
     background:var(--panel);border-radius:var(--radius);padding:36px;border:1px solid var(--line);
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .t-card:hover{
+    transform:translateY(-6px);border-color:rgba(212,175,106,.4);
+    box-shadow:0 24px 50px -20px rgba(212,175,106,.18);
   }
   .t-card .quote{color:var(--ink-soft);font-size:.98rem;margin-bottom:18px;font-style:italic}
   .t-card .who{font-weight:700;font-size:.92rem;color:var(--ink)}
@@ -134,7 +170,11 @@
 
   /* compare */
   .compare{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:64px}
-  .compare-card{border-radius:var(--radius);padding:38px;border:1px solid var(--line);background:var(--panel)}
+  .compare-card{
+    border-radius:var(--radius);padding:38px;border:1px solid var(--line);background:var(--panel);
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .compare-card:hover{transform:translateY(-6px);box-shadow:0 24px 50px -20px rgba(0,0,0,.5)}
   .compare-card.bad{border-color:rgba(217,122,110,.3)}
   .compare-card.good{border-color:rgba(212,175,106,.35)}
   .compare-card h3{font-size:1.4rem;margin-bottom:36px}
@@ -188,6 +228,8 @@
 </head>
 <body>
 
+<div id="cursor-glow"></div>
+
 <header>
   <div class="brand">
     <div class="logo">A</div>
@@ -216,7 +258,7 @@
 <section class="testimonials">
   <div class="wrap center">
     <span class="eyebrow">Was unsere Kund:innen über uns sagen</span>
-    <p style="margin-top:10px;color:var(--ink-soft)">Auszug aus über 400 Google Bewertungen</p>
+    <p style="margin-top:10px;color:var(--ink-soft)">Auszug aus über <span class="counter" data-target="400">0</span>+ Google Bewertungen</p>
     <div class="t-grid">
       <div class="t-card reveal">
         <div class="stars">★★★★★</div>
@@ -236,7 +278,7 @@
   <h2>Vertrieb ist kein Talent.<br>Es ist Struktur.</h2>
   <div class="struktur reveal" style="margin-top:64px">
     <div>
-      <p class="lead">Seit über 25 Jahren unterstützt Tarek Abouelela mittelständische Unternehmen, Konzerne und Einzelunternehmer:innen dabei, ihre Vertriebswirksamkeit systematisch zu steigern.</p>
+      <p class="lead">Seit über <span class="counter" data-target="25">0</span> Jahren unterstützt Tarek Abouelela mittelständische Unternehmen, Konzerne und Einzelunternehmer:innen dabei, ihre Vertriebswirksamkeit systematisch zu steigern.</p>
       <p class="lead" style="margin-top:20px">Als Trainer, Speaker und Sparringspartner hat er tausende Vertriebsmitarbeiter und Unternehmer begleitet – mit einem klaren Fokus: <strong>Entscheidungen herbeiführen statt Angebote hinterherschicken.</strong></p>
       <ul>
         <li>Seit über 25 Jahren Verkäufer aus Leidenschaft</li>
@@ -296,7 +338,7 @@
   <div class="wrap center">
     <h2>Stimmen aus der Praxis.</h2>
     <span class="eyebrow" style="margin-top:28px;display:inline-block">Was unsere Kund:innen über uns sagen</span>
-    <p style="margin-top:10px;color:var(--ink-soft)">Auszug aus über 400 Google Bewertungen</p>
+    <p style="margin-top:10px;color:var(--ink-soft)">Auszug aus über <span class="counter" data-target="400">0</span>+ Google Bewertungen</p>
     <div class="t-grid">
       <div class="t-card reveal">
         <div class="stars">★★★★★</div>
@@ -380,6 +422,11 @@
   <a href="#">Datenschutz</a>
 </footer>
 
+<div class="sticky-cta" id="sticky-cta">
+  <span>Bereit für mehr Abschlüsse?</span>
+  <a href="#termin" class="btn">Jetzt Termin anfragen</a>
+</div>
+
 <script>
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -390,7 +437,41 @@
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  document.querySelectorAll('.reveal, h2').forEach((el) => observer.observe(el));
+
+  document.querySelectorAll('.counter').forEach((el) => {
+    const target = parseInt(el.dataset.target, 10);
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          counterObserver.unobserve(el);
+          const duration = 1400;
+          const start = performance.now();
+          function tick(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            el.textContent = Math.round(progress * target);
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.4 });
+    counterObserver.observe(el);
+  });
+
+  const stickyCta = document.getElementById('sticky-cta');
+  const hero = document.querySelector('.hero');
+  const finalSection = document.getElementById('termin');
+  window.addEventListener('scroll', () => {
+    const pastHero = window.scrollY > hero.offsetHeight;
+    const reachedFinal = window.scrollY + window.innerHeight > finalSection.offsetTop;
+    stickyCta.classList.toggle('show', pastHero && !reachedFinal);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+    document.documentElement.style.setProperty('--my', e.clientY + 'px');
+  });
 </script>
 
 </body>
