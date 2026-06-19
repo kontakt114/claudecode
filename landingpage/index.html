@@ -531,17 +531,20 @@
   updateMorph();
 
   // Elementor (und andere Page-Builder) setzen auf Wrapper-Elementen oft
-  // overflow:hidden, was position:sticky zerstoert. Wir zwingen alle
-  // Vorfahren des Sticky-Elements auf overflow:visible.
+  // overflow:hidden, transform, will-change, filter oder contain. Jede
+  // dieser Eigenschaften auf einem Vorfahren zerstoert position:sticky.
+  // Wir entfernen sie bei allen Vorfahren des Sticky-Elements.
   (function fixStickyAncestors() {
     let el = morphWrap.parentElement;
     while (el && el !== document.body) {
-      const style = getComputedStyle(el);
-      if (style.overflow !== 'visible' || style.overflowX !== 'visible' || style.overflowY !== 'visible') {
-        el.style.setProperty('overflow', 'visible', 'important');
-        el.style.setProperty('overflow-x', 'visible', 'important');
-        el.style.setProperty('overflow-y', 'visible', 'important');
-      }
+      el.style.setProperty('overflow', 'visible', 'important');
+      el.style.setProperty('overflow-x', 'visible', 'important');
+      el.style.setProperty('overflow-y', 'visible', 'important');
+      el.style.setProperty('transform', 'none', 'important');
+      el.style.setProperty('will-change', 'auto', 'important');
+      el.style.setProperty('filter', 'none', 'important');
+      el.style.setProperty('contain', 'none', 'important');
+      el.style.setProperty('perspective', 'none', 'important');
       el = el.parentElement;
     }
   })();
