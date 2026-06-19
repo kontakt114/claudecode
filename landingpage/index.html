@@ -529,6 +529,22 @@
   }
   window.addEventListener('scroll', () => requestAnimationFrame(updateMorph));
   updateMorph();
+
+  // Elementor (und andere Page-Builder) setzen auf Wrapper-Elementen oft
+  // overflow:hidden, was position:sticky zerstoert. Wir zwingen alle
+  // Vorfahren des Sticky-Elements auf overflow:visible.
+  (function fixStickyAncestors() {
+    let el = morphWrap.parentElement;
+    while (el && el !== document.body) {
+      const style = getComputedStyle(el);
+      if (style.overflow !== 'visible' || style.overflowX !== 'visible' || style.overflowY !== 'visible') {
+        el.style.setProperty('overflow', 'visible', 'important');
+        el.style.setProperty('overflow-x', 'visible', 'important');
+        el.style.setProperty('overflow-y', 'visible', 'important');
+      }
+      el = el.parentElement;
+    }
+  })();
 </script>
 
 </body>
