@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertriebliche Standortbestimmung | abouelela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161c;
+    --ink-soft:#4b4f5a;
+    --paper:#ffffff;
+    --cloud:#f6f5f2;
+    --accent:#d9943a;
+    --accent-dark:#b87327;
+    --good:#1f9d63;
+    --bad:#e0483e;
+    --line:#e7e4dd;
+    --radius:18px;
+    --shadow:0 18px 40px -20px rgba(20,22,28,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  .narrow{max-width:760px;margin:0 auto;padding:0 24px}
+  section{padding:88px 0}
+  h1,h2,h3{font-weight:800;letter-spacing:-0.02em;line-height:1.15}
+  h1{font-size:clamp(2rem,4.2vw,2.9rem)}
+  h2{font-size:clamp(1.6rem,3.2vw,2.3rem);text-align:center}
+  p.lead{font-size:1.15rem;color:var(--ink-soft)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent-dark);background:#fbeede;border:1px solid #f0d5ab;
+    padding:7px 14px;border-radius:999px;
+  }
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+    color:#fff;font-weight:700;font-size:1.02rem;
+    padding:17px 34px;border-radius:12px;text-decoration:none;
+    box-shadow:0 14px 30px -10px rgba(184,115,39,.55);
+    border:none;cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px -10px rgba(184,115,39,.65)}
+  .center{text-align:center}
+
+  /* Header */
+  header{padding:28px 0}
+  .brand{display:flex;align-items:center;justify-content:center;gap:12px}
+  .brand .logo{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:1.1rem;
+  }
+  .brand .name{font-size:1.35rem;font-weight:800}
+  .brand .tag{display:block;font-size:.72rem;color:var(--ink-soft);font-weight:500;letter-spacing:.02em}
+
+  /* Hero */
+  .hero{padding-top:8px;padding-bottom:60px;text-align:center}
+  .hero h1{margin:18px auto 16px;max-width:760px}
+  .video-card{
+    position:relative;max-width:760px;margin:34px auto 26px;
+    border-radius:24px;overflow:hidden;box-shadow:var(--shadow);
+    aspect-ratio:16/9;background:#0e0f13;
+  }
+  .video-card img{width:100%;height:100%;object-fit:cover;opacity:.85}
+  .video-card .badge{
+    position:absolute;left:24px;bottom:24px;color:#fff;text-align:left;
+    text-shadow:0 2px 10px rgba(0,0,0,.5);
+  }
+  .video-card .badge strong{display:block;font-size:1.5rem;letter-spacing:.01em}
+  .play{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  }
+  .play span{
+    width:74px;height:74px;border-radius:50%;
+    background:rgba(255,255,255,.92);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  .play span::before{
+    content:'';border-style:solid;border-width:13px 0 13px 20px;
+    border-color:transparent transparent transparent var(--accent-dark);
+    margin-left:4px;
+  }
+  .hero .meta{color:var(--ink-soft);max-width:600px;margin:0 auto 36px}
+  .timer{color:var(--ink-soft);font-size:.9rem;margin-bottom:14px}
+
+  /* Testimonials */
+  .testimonials{background:var(--cloud)}
+  .stars{color:#f0a93a;letter-spacing:2px;font-size:1.1rem;margin-bottom:10px}
+  .t-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:40px}
+  .t-card{
+    background:#fff;border-radius:var(--radius);padding:28px;border:1px solid var(--line);
+  }
+  .t-card .quote{color:var(--ink-soft);font-size:.98rem;margin-bottom:14px}
+  .t-card .who{font-weight:700;font-size:.92rem}
+  .t-card .who span{color:var(--ink-soft);font-weight:500;font-size:.82rem;display:block}
+
+  /* Struktur section */
+  .struktur{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .struktur .photo{
+    border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
+    aspect-ratio:4/5;background:#1a1c22;
+  }
+  .struktur ul{list-style:none;margin-top:22px}
+  .struktur li{
+    display:flex;gap:10px;padding:9px 0;color:var(--ink-soft);font-weight:500;
+  }
+  .struktur li::before{content:'→';color:var(--accent-dark);font-weight:800}
+
+  /* compare */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+  .compare-card{border-radius:var(--radius);padding:30px;border:1px solid var(--line)}
+  .compare-card.bad{background:#fdf3f1}
+  .compare-card.good{background:#f1faf4}
+  .compare-card h3{font-size:1.15rem;margin-bottom:18px}
+  .compare-card ul{list-style:none}
+  .compare-card li{display:flex;gap:10px;padding:8px 0;font-size:.96rem}
+  .compare-card.bad li::before{content:'✕';color:var(--bad);font-weight:800;flex-shrink:0}
+  .compare-card.good li::before{content:'✓';color:var(--good);font-weight:800;flex-shrink:0}
+  .arrow-divider{display:flex;justify-content:center;margin:30px 0;color:var(--accent-dark);font-size:1.8rem}
+
+  /* result */
+  .result-list{display:flex;flex-direction:column;gap:14px;max-width:480px;margin:30px auto 40px}
+  .result-list .row{
+    display:flex;align-items:center;gap:14px;background:var(--cloud);
+    border-radius:14px;padding:16px 20px;font-weight:600;
+  }
+  .result-list .row::before{content:'→';color:var(--accent-dark);font-weight:800;font-size:1.2rem}
+
+  /* audience */
+  .audience{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px}
+
+  /* final CTA */
+  .final{background:#14161c;color:#fff}
+  .final h2{color:#fff}
+  .final p.lead{color:#c8c9cf}
+  .form-card{
+    background:#fff;color:var(--ink);border-radius:24px;padding:38px;
+    box-shadow:var(--shadow);max-width:520px;margin:44px auto 0;
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--ink-soft)}
+  .field input{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    font-family:inherit;font-size:.96rem;background:var(--cloud);
+  }
+  .field input:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .consent{display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:var(--ink-soft);margin:16px 0 20px}
+  .consent input{margin-top:3px}
+  .form-card .btn{width:100%}
+
+  footer{padding:34px 0;text-align:center;color:var(--ink-soft);font-size:.85rem;background:#0e0f13}
+  footer a{color:#c8c9cf;text-decoration:none;margin:0 12px}
+
+  @media (max-width:760px){
+    .struktur,.compare,.audience,.t-grid,.grid2{grid-template-columns:1fr}
+    section{padding:60px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <span class="name">abouelela</span>
+      <span class="tag">Wir machen Champions</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <span class="eyebrow">OPTION NUMMER EINS</span>
+  <h1>Gute Gespräche und gleichzeitig zu wenig Abschlüsse?</h1>
+
+  <div class="video-card">
+    <img src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1200&auto=format&fit=crop" alt="Tarek Abouelela">
+    <div class="play"><span></span></div>
+    <div class="badge"><strong>Option Nummer Eins</strong></div>
+  </div>
+
+  <p class="meta">Erhalte in 60 Minuten Klarheit darüber, an welcher Stelle Du in Deinem Vertriebsprozess Deals verlierst – und was konkret verändert werden muss, um Deine Abschlussquote zu steigern.</p>
+
+  <div class="timer">Die Termine sind limitiert und werden individuell geprüft.</div>
+  <a href="#termin" class="btn">Jetzt Termin anfragen</a>
+</section>
+
+<section class="testimonials">
+  <div class="wrap center">
+    <span class="eyebrow">Was unsere Kund:innen über uns sagen</span>
+    <p style="margin-top:10px;color:var(--ink-soft)">Auszug aus über 400 Google Bewertungen</p>
+    <div class="t-grid">
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">„Ich bin absolut begeistert, nicht nur vom Seminar sondern auch von Tarek, der ein mehrwert & absolut wertvoll & sinnvolle Tipps gibt, die einen auch weiterbringen!“</p>
+        <div class="who">Maria R. <span>Google Bewertung</span></div>
+      </div>
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">„Geübter Verkäufertyp hier mit nicht enormen Fachwissen und viel Praxisbezug überzeugt — besonders beeindruckt hat mich seine Fähigkeit, auch komplexe Inhalte einfach und motiviert zu vermitteln.“</p>
+        <div class="who">A. Sternberg <span>Google Bewertung</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Vertrieb ist kein Talent.<br>Es ist Struktur.</h2>
+  <div class="struktur" style="margin-top:44px">
+    <div>
+      <p class="lead">Seit über 25 Jahren unterstützt Tarek Abouelela mittelständische Unternehmen, Konzerne und Einzelunternehmer:innen dabei, ihre Vertriebswirksamkeit systematisch zu steigern.</p>
+      <p class="lead" style="margin-top:14px">Als Trainer, Speaker und Sparringspartner hat er tausende Vertriebsmitarbeiter und Unternehmer begleitet – mit einem klaren Fokus: <strong>Entscheidungen herbeiführen statt Angebote hinterherschicken.</strong></p>
+      <ul>
+        <li>Seit über 25 Jahren Verkäufer aus Leidenschaft</li>
+        <li>Über 25 Jahre Erfahrung in der Beratung</li>
+        <li>Speaker &amp; Vertriebsexperte</li>
+        <li>Praxisnah, direkt, umsetzungsorientiert</li>
+      </ul>
+    </div>
+    <div class="photo">
+      <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=900&auto=format&fit=crop" alt="Tarek Abouelela">
+    </div>
+  </div>
+</section>
+
+<section class="cloud wrap" style="background:var(--cloud)">
+  <h2>Kommt dir das bekannt vor?</h2>
+  <div class="compare">
+    <div class="compare-card bad">
+      <h3>Das Problem</h3>
+      <ul>
+        <li>Kunden sagen „Wir melden uns“ – und melden sich nicht wieder</li>
+        <li>Gute Verkaufsgespräche – aber zu wenige Abschlüsse</li>
+        <li>Angebote werden verglichen oder verzögert</li>
+        <li>Viele Termine und gefühlt keine gute Abschlussquote</li>
+        <li>Preis-Einwände, obwohl die Qualität stimmt</li>
+      </ul>
+    </div>
+    <div class="compare-card good">
+      <h3>Was du erhältst</h3>
+      <ul>
+        <li>Analyse deiner aktuellen Vertriebsstruktur</li>
+        <li>Identifikation deiner Entscheidungsblockaden</li>
+        <li>Bewertung deiner Angebotskommunikation</li>
+        <li>Klarheit darüber, wo du deine Deals verlierst</li>
+        <li>Konkrete Handlungsempfehlungen</li>
+        <li>Offenes Q&amp;A</li>
+      </ul>
+    </div>
+  </div>
+  <p class="center lead" style="margin-top:30px;max-width:640px;margin-left:auto;margin-right:auto">In den meisten Fällen liegt das Problem nicht am Produkt oder am Preis, sondern an der fehlenden Entscheidungsführung im Gespräch.</p>
+</section>
+
+<section class="wrap center">
+  <span class="eyebrow">Genau das ändert sich</span>
+  <h2 style="margin-top:14px">Nach der vertrieblichen Standortbestimmung</h2>
+  <h3 style="margin-top:40px;font-size:1.3rem">Dein Ergebnis nach 60 Minuten:</h3>
+  <div class="result-list">
+    <div class="row">Klarheit über deinen Vertriebsprozess</div>
+    <div class="row">Klare Struktur für den Prozess</div>
+    <div class="row">Sicherheit im nächsten Verkaufsgespräch</div>
+  </div>
+  <p class="lead" style="max-width:560px;margin:0 auto 30px">Du weißt exakt, wo du stehst und was du verändern darfst, um mehr Abschlüsse aus weniger Gesprächen zu erzielen.</p>
+  <a href="#termin" class="btn">Jetzt Termin anfragen</a>
+</section>
+
+<section class="testimonials">
+  <div class="wrap center">
+    <h2>Stimmen aus der Praxis.</h2>
+    <span class="eyebrow" style="margin-top:18px">Was unsere Kund:innen über uns sagen</span>
+    <p style="margin-top:10px;color:var(--ink-soft)">Auszug aus über 400 Google Bewertungen</p>
+    <div class="t-grid">
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">„Ich bin absolut begeistert, nicht nur vom Seminar sondern auch von Tarek, der ein mehrwert & absolut wertvolle Tipps gibt, die einen auch weiterbringen!“</p>
+        <div class="who">Maria R. <span>Google Bewertung</span></div>
+      </div>
+      <div class="t-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote">„Klar, direkt und auf den Punkt. Nach dem Gespräch wusste ich genau, woran ich arbeiten muss.“</p>
+        <div class="who">J. Hofer <span>Google Bewertung</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Für wen ist die Standortbestimmung geeignet?</h2>
+  <div class="audience">
+    <div class="compare-card good">
+      <h3>Geeignet für</h3>
+      <ul>
+        <li>Unternehmer und Geschäftsführer</li>
+        <li>Vertriebsleiter</li>
+        <li>Mittelständische Unternehmen mit aktiver Vertriebsstruktur</li>
+        <li>Ambitionierte Einzelunternehmer, die wachsen wollen</li>
+        <li>Vertriebler:innen, die sich etwas Gutes tun möchten</li>
+      </ul>
+    </div>
+    <div class="compare-card bad">
+      <h3>Nicht geeignet für</h3>
+      <ul>
+        <li>Personen, die nur Bestätigung suchen</li>
+        <li>Einzelunternehmer unter 10.000 EUR Monatsumsatz</li>
+        <li>„Ich will nur hören, was du sagst“-Mentalität</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="termin">
+  <div class="narrow center">
+    <h2>Wenn du Klarheit willst, ist das dein nächster Schritt.</h2>
+    <p class="lead">Bewirb dich für die vertriebliche Standortbestimmung mit uns. Jede Anfrage wird individuell geprüft. Du erhältst im Anschluss zeitnah eine E-Mail von unserem Team und wir finden heraus, ob die vertriebliche Standortbestimmung für dich geeignet ist.</p>
+
+    <form class="form-card" onsubmit="return false">
+      <div class="grid2">
+        <div class="field">
+          <label>Vorname</label>
+          <input type="text" placeholder="Vorname" required>
+        </div>
+        <div class="field">
+          <label>Nachname</label>
+          <input type="text" placeholder="Nachname" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>E-Mail</label>
+        <input type="email" placeholder="E-Mail" required>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Firmenname</label>
+          <input type="text" placeholder="Firmenname" required>
+        </div>
+        <div class="field">
+          <label>Telefon</label>
+          <input type="tel" placeholder="Telefon" required>
+        </div>
+      </div>
+      <label class="consent">
+        <input type="checkbox" required>
+        Ich bin mit den Datenschutzbestimmungen einverstanden und möchte meine Kontaktdaten gespeichert wissen. Alles geprüft & DSGVO konform.
+      </label>
+      <button type="submit" class="btn">Senden</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <a href="#">Impressum</a>
+  <a href="#">Datenschutz</a>
+</footer>
+
+</body>
+</html>
