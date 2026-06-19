@@ -24,7 +24,7 @@ export function QuizFlow({ onFinish }: { onFinish: (answers: QuizOption[]) => vo
     <div className="space-y-6">
       <div className="h-1.5 w-full rounded-full bg-zinc-100">
         <div
-          className="h-1.5 rounded-full bg-indigo-600 transition-all"
+          className="h-1.5 rounded-full bg-seafoam-500 transition-all"
           style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }}
         />
       </div>
@@ -37,7 +37,7 @@ export function QuizFlow({ onFinish }: { onFinish: (answers: QuizOption[]) => vo
           <button
             key={option.label}
             onClick={() => selectOption(option)}
-            className="rounded-lg border border-zinc-200 px-4 py-3 text-left text-sm transition hover:border-indigo-400 hover:bg-indigo-50"
+            className="rounded-lg border border-zinc-200 px-4 py-3 text-left text-sm transition hover:border-seafoam-400 hover:bg-seafoam-50"
           >
             {option.label}
           </button>

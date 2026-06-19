@@ -36,7 +36,7 @@ export function ResultCard({ content }: { content: TypeContent }) {
         <ul className="space-y-2">
           {content.tips.map((tip) => (
             <li key={tip} className="flex gap-2 text-sm text-zinc-700">
-              <span className="text-indigo-600">•</span>
+              <span className="text-seafoam-600">•</span>
               <span>{tip}</span>
             </li>
           ))}
@@ -49,9 +49,9 @@ export function ResultCard({ content }: { content: TypeContent }) {
           Postfach.
         </div>
       ) : (
-        <div className="space-y-3 rounded-xl border border-indigo-200 bg-indigo-50 p-5 text-center">
-          <p className="font-semibold text-indigo-900">Willst du mehr davon?</p>
-          <p className="text-sm text-indigo-700">
+        <div className="space-y-3 rounded-xl border border-seafoam-200 bg-seafoam-50 p-5 text-center">
+          <p className="font-semibold text-seafoam-700">Willst du mehr davon?</p>
+          <p className="text-sm text-seafoam-600">
             Wir schicken dir eine 5-Tage-Serie mit weiteren Tipps passend zu deinem Typ.
           </p>
           <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
@@ -61,12 +61,12 @@ export function ResultCard({ content }: { content: TypeContent }) {
               placeholder="deine@email.de"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 rounded-lg border border-indigo-300 px-3 py-2 text-sm"
+              className="flex-1 rounded-lg border border-seafoam-300 px-3 py-2 text-sm"
             />
             <button
               type="submit"
               disabled={status === "submitting"}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
+              className="rounded-lg bg-seafoam-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-seafoam-600 disabled:opacity-60"
             >
               {status === "submitting" ? "Wird gesendet…" : "Tipps zuschicken"}
             </button>
