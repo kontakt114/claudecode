@@ -520,10 +520,12 @@
     const rect = morphWrap.getBoundingClientRect();
     const scrollable = rect.height - window.innerHeight;
     const progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
-    morphBad.style.opacity = 1 - progress;
-    morphBad.style.transform = `translateY(${-progress * 50}px) scale(${1 - progress * 0.06})`;
-    morphGood.style.opacity = progress;
-    morphGood.style.transform = `translateY(${(1 - progress) * 50}px) scale(${0.94 + progress * 0.06})`;
+    const badOpacity = Math.max(1 - progress * 1.6, 0);
+    const goodOpacity = Math.min(progress * 1.6, 1);
+    morphBad.style.opacity = badOpacity;
+    morphBad.style.transform = `translateY(${-progress * 80}px) scale(${1.25 - progress * 0.55})`;
+    morphGood.style.opacity = goodOpacity;
+    morphGood.style.transform = `translateY(${(1 - progress) * 80}px) scale(${0.7 + progress * 0.55})`;
   }
   window.addEventListener('scroll', () => requestAnimationFrame(updateMorph));
   updateMorph();
