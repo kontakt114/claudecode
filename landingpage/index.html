@@ -184,6 +184,28 @@
   .compare-card li{display:flex;gap:12px;padding:11px 0;font-size:.96rem;color:var(--ink-soft)}
   .compare-card.bad li::before{content:'✕';color:var(--bad);font-weight:800;flex-shrink:0}
   .compare-card.good li::before{content:'✓';color:var(--accent);font-weight:800;flex-shrink:0}
+
+  /* morph problem -> solution */
+  .morph-wrap{position:relative;height:220vh}
+  .morph-sticky{
+    position:sticky;top:0;height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .morph-card{
+    position:absolute;width:min(560px,88vw);
+    border-radius:var(--radius);padding:44px;border:1px solid var(--line);background:var(--panel);
+    will-change:opacity, transform;
+  }
+  .morph-card h3{font-size:1.4rem;margin-bottom:36px}
+  .morph-card ul{list-style:none}
+  .morph-card li{display:flex;gap:12px;padding:11px 0;font-size:.96rem;color:var(--ink-soft)}
+  .morph-bad{border-color:rgba(217,122,110,.3)}
+  .morph-bad li::before{content:'✕';color:var(--bad);font-weight:800;flex-shrink:0}
+  .morph-good{border-color:rgba(212,175,106,.35);opacity:0}
+  .morph-good h3{color:var(--accent-bright)}
+  .morph-good li::before{content:'✓';color:var(--accent);font-weight:800;flex-shrink:0}
+  @media (max-width:760px){.morph-wrap{height:160vh}}
   .arrow-divider{display:flex;justify-content:center;margin:30px 0;color:var(--accent);font-size:1.8rem}
 
   /* result */
@@ -294,32 +316,40 @@
   </div>
 </section>
 
-<section class="cloud wrap" style="background:var(--cloud)">
-  <h2>Kommt dir das bekannt vor?</h2>
-  <div class="compare">
-    <div class="compare-card bad reveal">
-      <h3>Das Problem</h3>
-      <ul>
-        <li>Kunden sagen „Wir melden uns“ – und melden sich nicht wieder</li>
-        <li>Gute Verkaufsgespräche – aber zu wenige Abschlüsse</li>
-        <li>Angebote werden verglichen oder verzögert</li>
-        <li>Viele Termine und gefühlt keine gute Abschlussquote</li>
-        <li>Preis-Einwände, obwohl die Qualität stimmt</li>
-      </ul>
-    </div>
-    <div class="compare-card good reveal reveal-1">
-      <h3>Was du erhältst</h3>
-      <ul>
-        <li>Analyse deiner aktuellen Vertriebsstruktur</li>
-        <li>Identifikation deiner Entscheidungsblockaden</li>
-        <li>Bewertung deiner Angebotskommunikation</li>
-        <li>Klarheit darüber, wo du deine Deals verlierst</li>
-        <li>Konkrete Handlungsempfehlungen</li>
-        <li>Offenes Q&amp;A</li>
-      </ul>
+<section class="cloud" style="background:var(--cloud)">
+  <div class="wrap">
+    <h2>Kommt dir das bekannt vor?</h2>
+  </div>
+
+  <div class="morph-wrap">
+    <div class="morph-sticky">
+      <div class="morph-card morph-bad" id="morphBad">
+        <h3>Das Problem</h3>
+        <ul>
+          <li>Kunden sagen „Wir melden uns“ – und melden sich nicht wieder</li>
+          <li>Gute Verkaufsgespräche – aber zu wenige Abschlüsse</li>
+          <li>Angebote werden verglichen oder verzögert</li>
+          <li>Viele Termine und gefühlt keine gute Abschlussquote</li>
+          <li>Preis-Einwände, obwohl die Qualität stimmt</li>
+        </ul>
+      </div>
+      <div class="morph-card morph-good" id="morphGood">
+        <h3>Was du erhältst</h3>
+        <ul>
+          <li>Analyse deiner aktuellen Vertriebsstruktur</li>
+          <li>Identifikation deiner Entscheidungsblockaden</li>
+          <li>Bewertung deiner Angebotskommunikation</li>
+          <li>Klarheit darüber, wo du deine Deals verlierst</li>
+          <li>Konkrete Handlungsempfehlungen</li>
+          <li>Offenes Q&amp;A</li>
+        </ul>
+      </div>
     </div>
   </div>
-  <p class="center lead" style="margin-top:44px;max-width:640px;margin-left:auto;margin-right:auto">In den meisten Fällen liegt das Problem nicht am Produkt oder am Preis, sondern an der fehlenden Entscheidungsführung im Gespräch.</p>
+
+  <div class="wrap">
+    <p class="center lead" style="max-width:640px;margin-left:auto;margin-right:auto">In den meisten Fällen liegt das Problem nicht am Produkt oder am Preis, sondern an der fehlenden Entscheidungsführung im Gespräch.</p>
+  </div>
 </section>
 
 <section class="wrap center">
@@ -482,6 +512,21 @@
   }
   window.addEventListener('scroll', () => requestAnimationFrame(updateParallax));
   updateParallax();
+
+  const morphWrap = document.querySelector('.morph-wrap');
+  const morphBad = document.getElementById('morphBad');
+  const morphGood = document.getElementById('morphGood');
+  function updateMorph() {
+    const rect = morphWrap.getBoundingClientRect();
+    const scrollable = rect.height - window.innerHeight;
+    const progress = Math.min(Math.max(-rect.top / scrollable, 0), 1);
+    morphBad.style.opacity = 1 - progress;
+    morphBad.style.transform = `translateY(${-progress * 50}px) scale(${1 - progress * 0.06})`;
+    morphGood.style.opacity = progress;
+    morphGood.style.transform = `translateY(${(1 - progress) * 50}px) scale(${0.94 + progress * 0.06})`;
+  }
+  window.addEventListener('scroll', () => requestAnimationFrame(updateMorph));
+  updateMorph();
 </script>
 
 </body>
