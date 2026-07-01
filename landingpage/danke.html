@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danke, dass du dabei bleibst | abouelela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f3efe6;
+    --ink-soft:#a9a497;
+    --paper:#0a0a0c;
+    --panel:#121215;
+    --cloud:#15151a;
+    --accent:#d4af6a;
+    --accent-dark:#a87f3f;
+    --accent-bright:#f1cd86;
+    --line:rgba(212,175,106,.18);
+    --radius:18px;
+    --shadow:0 24px 60px -24px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(212,175,106,.07), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(212,175,106,.05), transparent 50%);
+    background-attachment:fixed;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  .wrap{max-width:1040px;margin:0 auto;padding-left:24px;padding-right:24px}
+  .narrow{max-width:680px;margin:0 auto;padding:0 24px}
+  section{padding:100px 0;position:relative}
+  h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:0.01em;line-height:1.18;color:var(--ink)}
+  h1{font-size:clamp(2.2rem,4.4vw,3.2rem)}
+  h2{font-size:clamp(1.8rem,3.4vw,2.5rem);text-align:center;position:relative;padding-bottom:22px}
+  h2::after{
+    content:'';position:absolute;left:50%;bottom:0;
+    width:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);
+    transform:translateX(-50%);transition:width 1s ease .2s;
+  }
+  h2.is-visible::after{width:120px}
+  h3{font-weight:700}
+  .center{text-align:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent-bright);background:rgba(212,175,106,.08);border:1px solid var(--line);
+    padding:9px 18px;border-radius:999px;
+  }
+  .eyebrow::before,.eyebrow::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+  /* Cursor glow */
+  #cursor-glow{
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%), rgba(212,175,106,.10), transparent 70%);
+    transition:background .15s ease-out;
+  }
+  body > *:not(#cursor-glow){position:relative;z-index:1}
+
+  /* Header */
+  header{padding:30px 0;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;justify-content:center;gap:14px}
+  .brand .logo{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:#1a1306;font-weight:800;font-size:1.1rem;font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .brand .name{font-size:1.4rem;font-weight:700;font-family:'Cormorant Garamond',serif;letter-spacing:.03em}
+  .brand .tag{display:block;font-size:.72rem;color:var(--ink-soft);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+
+  /* Scroll reveal */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease}
+  .reveal.is-visible{opacity:1;transform:translateY(0)}
+  .reveal-1{transition-delay:.12s}
+  .reveal-2{transition-delay:.24s}
+
+  /* Hero / greeting */
+  .hero{padding-top:12px;padding-bottom:70px;text-align:center}
+  .hero h1{margin:24px auto 40px;max-width:640px}
+
+  .media-placeholder{
+    max-width:640px;margin:0 auto 48px;border-radius:24px;overflow:hidden;
+    aspect-ratio:16/9;background:var(--panel);border:1.5px dashed var(--line);
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    padding:32px;text-align:center;
+  }
+  .media-placeholder .icon{
+    width:64px;height:64px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  .media-placeholder p{color:var(--ink-soft);font-weight:600;font-size:.98rem}
+  .media-placeholder .hint{
+    color:var(--ink-soft);font-size:.82rem;font-weight:500;max-width:420px;
+    border-top:1px solid var(--line);padding-top:14px;margin-top:4px;
+  }
+
+  .greeting-text{max-width:600px;margin:0 auto;text-align:left}
+  .greeting-text p{color:var(--ink-soft);font-size:1.08rem;margin-bottom:20px}
+  .greeting-text p:last-child{margin-bottom:0;color:var(--ink);font-weight:600;font-style:italic}
+
+  /* Feature cards */
+  .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+  .feature-card{
+    background:var(--panel);border-radius:var(--radius);padding:38px 32px;border:1px solid var(--line);
+    text-align:center;transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .feature-card:hover{
+    transform:translateY(-6px);border-color:rgba(212,175,106,.4);
+    box-shadow:0 24px 50px -20px rgba(212,175,106,.18);
+  }
+  .feature-card .icon{font-size:2.2rem;margin-bottom:18px}
+  .feature-card h3{font-size:1.25rem;color:var(--accent-bright);margin-bottom:12px}
+  .feature-card p{color:var(--ink-soft);font-size:.96rem}
+
+  footer{padding:34px 0;text-align:center;color:var(--ink-soft);font-size:.85rem;background:#050506;border-top:1px solid var(--line)}
+  footer a{color:var(--ink-soft);text-decoration:none;margin:0 12px}
+
+  @media (max-width:760px){
+    .cards-grid{grid-template-columns:1fr}
+    section{padding:70px 0}
+    .greeting-text{text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor-glow"></div>
+
+<header>
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <span class="name">abouelela</span>
+      <span class="tag">Wir machen Champions</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <span class="eyebrow">Danke, dass du dabei bleibst</span>
+  <h1>Schön, dass du dabei bist.</h1>
+
+  <div class="media-placeholder reveal">
+    <div class="icon">🖼️</div>
+    <p>Platzhalter für Bild oder Video</p>
+    <span class="hint">🎥 Tipp: Ein 30–60 Sekunden Video an dieser Stelle wirkt unglaublich persönlich.</span>
+  </div>
+
+  <div class="greeting-text reveal reveal-1">
+    <p>Hey, ich freue mich, dass du dabei bist.</p>
+    <p>Mir ist wichtig, dass du aus jeder E-Mail etwas mitnehmen kannst. Keine leeren Motivationssprüche und kein Marketing-BlaBla – sondern Dinge, die du direkt ausprobieren kannst.</p>
+    <p>Ich hoffe, wir lesen uns bald im Newsletter!</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Was erwartet dich?</h2>
+  <div class="cards-grid">
+    <div class="feature-card reveal">
+      <div class="icon">💡</div>
+      <h3>Praktische Strategien</h3>
+      <p>Ideen, die du sofort umsetzen kannst.</p>
+    </div>
+    <div class="feature-card reveal reveal-1">
+      <div class="icon">📈</div>
+      <h3>Mehr Umsatz</h3>
+      <p>Wege zu planbaren und stärkeren Verkaufswochen.</p>
+    </div>
+    <div class="feature-card reveal reveal-2">
+      <div class="icon">🎯</div>
+      <h3>Vertrieb ohne Druck</h3>
+      <p>Kunden gewinnen, ohne sich zu verbiegen.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="#">Impressum</a>
+  <a href="#">Datenschutz</a>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, h2').forEach((el) => observer.observe(el));
+
+  window.addEventListener('mousemove', (e) => {
+    document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+    document.documentElement.style.setProperty('--my', e.clientY + 'px');
+  });
+</script>
+
+</body>
+</html>
