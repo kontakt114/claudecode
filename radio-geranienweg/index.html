@@ -100,11 +100,8 @@
   .brand .name{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem}
   .brand .tag{display:block;font-size:.68rem;color:var(--ink-soft);font-weight:500;letter-spacing:.03em}
   .nav-cta{display:flex;align-items:center;gap:18px}
-  .city-badge{
-    display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--ink-soft);font-weight:600;
-  }
-  .city-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--teal)}
-  @media (max-width:640px){ .city-badge{display:none} }
+  .city-badge-logo{height:34px;width:auto;object-fit:contain}
+  @media (max-width:640px){ .city-badge-logo{display:none} }
 
   /* Hero */
   .hero{
@@ -114,20 +111,29 @@
     max-width:1120px;margin:0 auto;
     border-radius:var(--radius-lg);
     position:relative;overflow:hidden;
-    background:
-      radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,.18), transparent 55%),
-      radial-gradient(90% 70% at 85% 100%, rgba(47,99,88,.55), transparent 60%),
-      linear-gradient(135deg, #e88a4f 0%, #dd6b3a 38%, #b8532b 75%, #7a3a24 100%);
+    background:#b8532b;
     padding:90px 48px 100px;
     color:#fff;
     text-align:center;
     box-shadow:var(--shadow);
   }
-  .hero-panel::before,.hero-panel::after{
-    content:'';position:absolute;border-radius:50%;filter:blur(2px);opacity:.5;
+  .hero-photo{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
   }
-  .hero-panel::before{width:280px;height:280px;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 70%);top:-90px;left:-70px}
-  .hero-panel::after{width:340px;height:340px;background:radial-gradient(circle,rgba(232,168,56,.5),transparent 70%);bottom:-140px;right:-90px}
+  .hero-panel::before,.hero-panel::after{
+    content:'';position:absolute;z-index:1;
+  }
+  .hero-panel::before{
+    inset:0;
+    background:
+      radial-gradient(120% 90% at 15% 0%, rgba(255,255,255,.15), transparent 55%),
+      radial-gradient(90% 70% at 85% 100%, rgba(47,99,88,.6), transparent 60%),
+      linear-gradient(135deg, rgba(232,138,79,.82) 0%, rgba(221,107,58,.82) 38%, rgba(184,83,43,.85) 75%, rgba(58,30,18,.9) 100%);
+  }
+  .hero-panel::after{
+    width:340px;height:340px;border-radius:50%;filter:blur(2px);opacity:.5;
+    background:radial-gradient(circle,rgba(232,168,56,.5),transparent 70%);bottom:-140px;right:-90px;
+  }
   .hero-content{position:relative;z-index:2;max-width:760px;margin:0 auto}
   .hero-panel .eyebrow{color:#ffe4cf}
   .hero-panel .eyebrow::before{background:#ffe4cf}
@@ -285,7 +291,7 @@
       </span>
     </a>
     <div class="nav-cta">
-      <span class="city-badge"><span class="dot"></span>Stadt Langenfeld</span>
+      <img class="city-badge-logo" src="http://radiogeranienweg.de/wp-content/uploads/2020/06/L_mit_Schriftzug_gruen_RGB-removebg-preview.png" alt="Stadt Langenfeld" onerror="this.style.display='none'">
       <a href="#hoeren" class="btn primary">Jetzt hören</a>
     </div>
   </div>
@@ -294,13 +300,14 @@
 <div id="top"></div>
 <section class="hero">
   <div class="hero-panel">
+    <img class="hero-photo" src="http://radiogeranienweg.de/wp-content/uploads/2020/05/IMG_6185-scaled.jpeg" alt="Familienzentrum Geranienweg">
     <div class="hero-content">
       <span class="eyebrow">Der Podcast des Familienzentrums Geranienweg</span>
       <h1><span class="quote-mark">„</span>Radio Geranienweg<span class="quote-mark">“</span></h1>
       <div class="soundwave">
         <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
-      <p class="lead">Einblicke in unseren Kita-Alltag, Tipps für Familien und gute Gespräche zum Zuhören – wann und wo du willst.</p>
+      <p class="lead">Einblicke in unseren Kita-Alltag, Tipps für Familien und gute Gespräche zum Zuhören – wann und wo Sie möchten.</p>
       <div class="listen-row" id="hoeren">
         <a href="#" class="listen-btn">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.207-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.652.95 3.559.95.865 0 2.21-1.01 3.85-1.01.62 0 2.833.06 4.294 2.15-.111.07-2.563 1.5-2.563 4.6 0 3.7 3.24 5.04 3.307 5.07z"/></svg>
@@ -321,7 +328,7 @@
 
 <section class="wrap">
   <div class="center">
-    <span class="eyebrow">Das erwartet dich</span>
+    <span class="eyebrow">Das erwartet Sie</span>
     <h2 style="margin-top:16px">Worum es in Radio Geranienweg geht</h2>
   </div>
   <div class="feature-grid">
@@ -369,7 +376,7 @@
         </li>
         <li>
           <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21h6"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 3z"/></svg></span>
-          <p>Nimm dir Ideen und Tipps mit, die du direkt für eure Familie nutzen kannst.</p>
+          <p>Nehmen Sie Ideen und Tipps mit, die Sie direkt für Ihre Familie nutzen können.</p>
         </li>
       </ul>
     </div>
@@ -431,7 +438,7 @@
     <div class="final-inner">
       <span class="eyebrow">Reinhören lohnt sich</span>
       <h2>Jetzt Radio Geranienweg abonnieren</h2>
-      <p class="lead">Neue Folgen bekommst du automatisch, sobald sie erscheinen – auf deiner liebsten Plattform.</p>
+      <p class="lead">Neue Folgen bekommen Sie automatisch, sobald sie erscheinen – auf Ihrer liebsten Plattform.</p>
       <div class="listen-row dark">
         <a href="#" class="listen-btn">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.207-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.652.95 3.559.95.865 0 2.21-1.01 3.85-1.01.62 0 2.833.06 4.294 2.15-.111.07-2.563 1.5-2.563 4.6 0 3.7 3.24 5.04 3.307 5.07z"/></svg>
