@@ -238,12 +238,13 @@
   }
   .player-card .label{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:16px;display:block}
   .player-art{
-    aspect-ratio:1/1;border-radius:18px;margin-bottom:20px;
+    aspect-ratio:1/1;border-radius:18px;margin-bottom:20px;overflow:hidden;
     background:
       radial-gradient(circle at 30% 25%, rgba(255,255,255,.25), transparent 55%),
       linear-gradient(135deg,var(--gold),var(--terracotta) 60%, var(--terracotta-dark));
     display:flex;align-items:center;justify-content:center;position:relative;
   }
+  .player-art img{width:100%;height:100%;object-fit:cover}
   .player-art .mic{width:64px;height:64px;color:#fff;opacity:.9}
   .player-meta{margin-bottom:16px}
   .player-meta .ep-title{font-weight:700;font-size:1.05rem;margin-bottom:4px}
@@ -256,8 +257,11 @@
   }
   .play-btn:hover{transform:scale(1.06)}
   .play-btn svg{width:20px;height:20px;margin-left:2px}
-  .progress{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
-  .progress span{display:block;height:100%;width:38%;background:#fff;border-radius:3px}
+  .play-btn .icon-pause{display:none;margin-left:0}
+  .play-btn.playing .icon-play{display:none}
+  .play-btn.playing .icon-pause{display:block}
+  .progress{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden;cursor:pointer}
+  .progress span{display:block;height:100%;width:0%;background:#fff;border-radius:3px}
   .player-time{font-size:.76rem;color:rgba(255,255,255,.6);margin-top:8px}
 
   /* Testimonials */
@@ -455,20 +459,22 @@
     <div class="player-card reveal reveal-2">
       <span class="label">Auszug aus der Vorstellungsfolge</span>
       <div class="player-art">
-        <svg class="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <img src="Medien/Podcast%20Cover%20Radio%20Geranienweg%20Langenfeld.jpg" alt="Podcast-Cover Radio Geranienweg">
       </div>
       <div class="player-meta">
-        <div class="ep-title">Teaser: Willkommen bei Radio Geranienweg</div>
+        <div class="ep-title">Vorstellung: Was Sie von diesem Podcast erwarten können</div>
         <div class="ep-host">mit Gordon Schönwälder</div>
       </div>
       <div class="player-controls">
-        <button class="play-btn" aria-label="Abspielen">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <button class="play-btn" id="playerPlayBtn" aria-label="Abspielen">
+          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
         </button>
-        <div class="progress"><span></span></div>
+        <div class="progress" id="playerProgress"><span></span></div>
       </div>
-      <div class="player-time">00:45 / 03:12</div>
+      <div class="player-time" id="playerTime">00:00 / 00:00</div>
     </div>
+    <audio id="trailerAudio" preload="metadata" src="Medien/podcast_23928_radio_geranienweg_der_pdcst_des_stadt_familienzentrums_geranienweg_in_langenfel_episode_210534_vorstellung_was_sie_von_diesem_pdcst_erwarten_konnen.mp3"></audio>
   </div>
 </section>
 
@@ -544,7 +550,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
   </div>
   <div class="mp-meta">
-    <div class="mp-title">Teaser: Willkommen bei Radio Geranienweg</div>
+    <div class="mp-title">Vorstellung: Was Sie erwarten können</div>
     <div class="mp-host">Radio Geranienweg</div>
   </div>
   <button class="mp-play" id="miniPlayerToggle" aria-label="Abspielen">
@@ -641,15 +647,67 @@
     miniPlayerObserver.observe(heroSentinel);
   }
 
-  miniPlayerToggle?.addEventListener('click', () => {
-    miniPlayer.classList.toggle('playing');
-  });
-
   miniPlayerClose?.addEventListener('click', () => {
     miniPlayer.classList.remove('show');
     dismissed = true;
     sessionStorage.setItem('rg_miniplayer_dismissed', '1');
   });
+
+  // Trailer audio player
+  const trailerAudio = document.getElementById('trailerAudio');
+  const playerPlayBtn = document.getElementById('playerPlayBtn');
+  const playerProgress = document.getElementById('playerProgress');
+  const playerProgressFill = playerProgress?.querySelector('span');
+  const playerTime = document.getElementById('playerTime');
+
+  function formatTime(seconds) {
+    if (!isFinite(seconds)) return '00:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function updatePlayingUI(isPlaying) {
+    playerPlayBtn?.classList.toggle('playing', isPlaying);
+    miniPlayer?.classList.toggle('playing', isPlaying);
+  }
+
+  function togglePlayback() {
+    if (!trailerAudio) return;
+    if (trailerAudio.paused) {
+      trailerAudio.play();
+    } else {
+      trailerAudio.pause();
+    }
+  }
+
+  playerPlayBtn?.addEventListener('click', togglePlayback);
+  miniPlayerToggle?.addEventListener('click', togglePlayback);
+
+  if (trailerAudio) {
+    trailerAudio.addEventListener('play', () => updatePlayingUI(true));
+    trailerAudio.addEventListener('pause', () => updatePlayingUI(false));
+    trailerAudio.addEventListener('ended', () => updatePlayingUI(false));
+
+    trailerAudio.addEventListener('loadedmetadata', () => {
+      if (playerTime) playerTime.textContent = formatTime(0) + ' / ' + formatTime(trailerAudio.duration);
+    });
+
+    trailerAudio.addEventListener('timeupdate', () => {
+      if (trailerAudio.duration) {
+        const pct = (trailerAudio.currentTime / trailerAudio.duration) * 100;
+        if (playerProgressFill) playerProgressFill.style.width = pct + '%';
+      }
+      if (playerTime) playerTime.textContent = formatTime(trailerAudio.currentTime) + ' / ' + formatTime(trailerAudio.duration || 0);
+    });
+
+    playerProgress?.addEventListener('click', (e) => {
+      if (!trailerAudio.duration) return;
+      const rect = playerProgress.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      trailerAudio.currentTime = ratio * trailerAudio.duration;
+    });
+  }
 </script>
 
 </body>
