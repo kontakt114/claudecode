@@ -38,6 +38,16 @@
     overflow-x:hidden;
   }
   img{max-width:100%;display:block}
+
+  /* Grain overlay */
+  body::before{
+    content:'';
+    position:fixed;inset:0;z-index:200;pointer-events:none;
+    opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:180px 180px;
+  }
   .wrap{max-width:1120px;margin:0 auto;padding-left:24px;padding-right:24px}
   .narrow{max-width:720px;margin:0 auto;padding-left:24px;padding-right:24px}
   section{padding:110px 0;position:relative}
@@ -118,7 +128,17 @@
     box-shadow:var(--shadow);
   }
   .hero-photo{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+    position:absolute;inset:-10% 0;width:100%;height:120%;object-fit:cover;z-index:0;
+    transform:translateY(0) scale(1.12);
+    will-change:transform;
+  }
+  .hero-spotlight{
+    position:absolute;z-index:1;width:560px;height:560px;border-radius:50%;
+    left:0;top:0;
+    background:radial-gradient(circle, rgba(255,229,196,.32), rgba(255,229,196,.08) 45%, transparent 70%);
+    mix-blend-mode:soft-light;pointer-events:none;
+    opacity:0;transition:opacity .4s ease;
+    transform:translate(-50%,-50%);
   }
   .hero-panel::before,.hero-panel::after{
     content:'';position:absolute;z-index:1;
@@ -170,9 +190,10 @@
   .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:60px}
   .feature-card{
     background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
-    padding:30px 26px;transition:transform .3s ease, box-shadow .3s ease;
+    padding:30px 26px;transition:transform .25s ease, box-shadow .25s ease;
+    transform-style:preserve-3d;
   }
-  .feature-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-sm)}
+  .feature-card:hover{box-shadow:var(--shadow-sm)}
   .feature-card .icon{
     width:46px;height:46px;border-radius:14px;background:var(--teal-light);color:var(--teal);
     display:flex;align-items:center;justify-content:center;margin-bottom:18px;
@@ -202,6 +223,7 @@
   .player-card{
     background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
     border-radius:var(--radius-md);padding:26px;backdrop-filter:blur(6px);
+    transition:transform .25s ease;transform-style:preserve-3d;
   }
   .player-card .label{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:16px;display:block}
   .player-art{
@@ -231,9 +253,10 @@
   .t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:60px}
   .t-card{
     background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);
-    padding:32px 28px;transition:transform .3s ease, box-shadow .3s ease;
+    padding:32px 28px;transition:transform .25s ease, box-shadow .25s ease;
+    transform-style:preserve-3d;
   }
-  .t-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-sm)}
+  .t-card:hover{box-shadow:var(--shadow-sm)}
   .t-card .quote-icon{color:var(--terracotta-light);font-family:'Fraunces',serif;font-size:2.6rem;line-height:.5;margin-bottom:14px;display:block}
   .t-card p.quote{color:var(--ink);font-size:.96rem;margin-bottom:22px}
   .t-who{display:flex;align-items:center;gap:12px}
@@ -275,6 +298,48 @@
     .hero-panel{padding:70px 26px 80px}
     .final{padding:64px 26px}
   }
+
+  /* Mini player */
+  .mini-player{
+    position:fixed;left:50%;bottom:22px;z-index:60;
+    display:flex;align-items:center;gap:14px;
+    background:var(--ink);color:#fff;border-radius:100px;
+    padding:10px 12px 10px 10px;box-shadow:0 20px 40px -14px rgba(0,0,0,.45);
+    transform:translate(-50%,140%);opacity:0;
+    transition:transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+    max-width:calc(100vw - 32px);
+  }
+  .mini-player.show{transform:translate(-50%,0);opacity:1}
+  .mini-player .mp-art{
+    width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--gold),var(--terracotta));
+    display:flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .mini-player .mp-art svg{width:18px;height:18px}
+  .mini-player .mp-meta{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:180px}
+  .mini-player .mp-title{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+  .mini-player .mp-host{font-size:.72rem;color:rgba(255,255,255,.6)}
+  .mini-player .mp-play{
+    width:36px;height:36px;border-radius:50%;background:#fff;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;border:none;cursor:pointer;
+  }
+  .mini-player .mp-play svg{width:15px;height:15px}
+  .mini-player .mp-play .icon-pause{display:none}
+  .mini-player.playing .mp-play .icon-play{display:none}
+  .mini-player.playing .mp-play .icon-pause{display:block}
+  .mini-player .mp-close{
+    width:28px;height:28px;border-radius:50%;background:transparent;color:rgba(255,255,255,.55);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;border:none;cursor:pointer;
+    margin-left:2px;
+  }
+  .mini-player .mp-close:hover{color:#fff}
+  .mini-player .mp-close svg{width:14px;height:14px}
+  @media (max-width:480px){
+    .mini-player .mp-meta{max-width:110px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .mini-player{transition:opacity .3s ease}
+  }
 </style>
 </head>
 <body>
@@ -301,6 +366,7 @@
 <section class="hero">
   <div class="hero-panel">
     <img class="hero-photo" src="http://radiogeranienweg.de/wp-content/uploads/2020/05/IMG_6185-scaled.jpeg" alt="Familienzentrum Geranienweg">
+    <div class="hero-spotlight" aria-hidden="true"></div>
     <div class="hero-content">
       <span class="eyebrow">Der Podcast des Familienzentrums Geranienweg</span>
       <h1><span class="quote-mark">„</span>Radio Geranienweg<span class="quote-mark">“</span></h1>
@@ -467,16 +533,117 @@
   </div>
 </footer>
 
+<div class="mini-player" id="miniPlayer">
+  <div class="mp-art">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+  </div>
+  <div class="mp-meta">
+    <div class="mp-title">Teaser: Willkommen bei Radio Geranienweg</div>
+    <div class="mp-host">Radio Geranienweg</div>
+  </div>
+  <button class="mp-play" id="miniPlayerToggle" aria-label="Abspielen">
+    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+  </button>
+  <button class="mp-close" id="miniPlayerClose" aria-label="Mini-Player schließen">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
 <script>
-  const observer = new IntersectionObserver((entries) => {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Scroll reveal
+  const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+        revealObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+  if (!reduceMotion) {
+    // Hero parallax
+    const heroPhoto = document.querySelector('.hero-photo');
+    const heroPanel = document.querySelector('.hero-panel');
+    let ticking = false;
+    function updateParallax() {
+      if (heroPhoto && heroPanel) {
+        const rect = heroPanel.getBoundingClientRect();
+        const offset = Math.max(-50, Math.min(50, rect.top * -0.12));
+        heroPhoto.style.transform = `translateY(${offset}px) scale(1.12)`;
+      }
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+    updateParallax();
+
+    // Hero cursor spotlight
+    const spotlight = document.querySelector('.hero-spotlight');
+    if (heroPanel && spotlight) {
+      heroPanel.addEventListener('mousemove', (e) => {
+        const rect = heroPanel.getBoundingClientRect();
+        spotlight.style.left = (e.clientX - rect.left) + 'px';
+        spotlight.style.top = (e.clientY - rect.top) + 'px';
+        spotlight.style.opacity = '1';
+      });
+      heroPanel.addEventListener('mouseleave', () => {
+        spotlight.style.opacity = '0';
+      });
+    }
+
+    // Card tilt
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (canHover) {
+      document.querySelectorAll('.feature-card, .t-card, .player-card').forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          const rx = (-py * 7).toFixed(2);
+          const ry = (px * 7).toFixed(2);
+          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px) scale(1.015)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
+  }
+
+  // Sticky mini player
+  const miniPlayer = document.getElementById('miniPlayer');
+  const miniPlayerToggle = document.getElementById('miniPlayerToggle');
+  const miniPlayerClose = document.getElementById('miniPlayerClose');
+  const heroSentinel = document.querySelector('.hero-panel');
+  let dismissed = sessionStorage.getItem('rg_miniplayer_dismissed') === '1';
+
+  if (heroSentinel && miniPlayer) {
+    const miniPlayerObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (dismissed) return;
+        miniPlayer.classList.toggle('show', !entry.isIntersecting);
+      });
+    }, { threshold: 0 });
+    miniPlayerObserver.observe(heroSentinel);
+  }
+
+  miniPlayerToggle?.addEventListener('click', () => {
+    miniPlayer.classList.toggle('playing');
+  });
+
+  miniPlayerClose?.addEventListener('click', () => {
+    miniPlayer.classList.remove('show');
+    dismissed = true;
+    sessionStorage.setItem('rg_miniplayer_dismissed', '1');
+  });
 </script>
 
 </body>
