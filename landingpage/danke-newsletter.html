@@ -37,7 +37,6 @@
     font-family:'Poppins',system-ui,sans-serif;
     color:var(--l-ink);
     background:var(--l-bg);
-    background-image:radial-gradient(circle at 15% 0%, rgba(168,127,63,.08), transparent 45%);
     line-height:1.65;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
@@ -52,21 +51,7 @@
   h1{font-size:clamp(2.1rem,4.2vw,3rem)}
   h2{font-size:clamp(1.6rem,3vw,2.2rem)}
   p.lead{font-size:1.08rem;color:var(--l-ink-soft);font-weight:400}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:10px;
-    font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--gold-dark);background:rgba(168,127,63,.08);border:1px solid var(--l-line);
-    padding:9px 18px;border-radius:999px;
-  }
-  .eyebrow::before,.eyebrow::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold-dark)}
   .center{text-align:center}
-
-  #cursor-glow{
-    position:fixed;inset:0;pointer-events:none;z-index:0;
-    background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%), rgba(168,127,63,.08), transparent 70%);
-    transition:background .15s ease-out;
-  }
-  body > *:not(#cursor-glow){position:relative;z-index:1}
 
   header{padding:26px 0;border-bottom:1px solid var(--l-line)}
   .brand{display:flex;align-items:center;justify-content:center}
@@ -82,9 +67,7 @@
 
   /* Podcast section - dark, for contrast */
   .podcast{background:var(--d-bg);color:var(--d-ink);border-top:1px solid var(--d-line)}
-  .podcast .eyebrow{color:var(--gold-bright);background:rgba(212,175,106,.08);border-color:var(--d-line)}
-  .podcast .eyebrow::before,.podcast .eyebrow::after{background:var(--gold)}
-  .podcast h2{margin-top:20px;color:var(--d-ink)}
+  .podcast h2{color:var(--d-ink)}
   .podcast p.lead{margin-top:24px;max-width:560px;margin-left:auto;margin-right:auto;color:var(--d-ink-soft)}
 
   .podcast-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:44px}
@@ -120,8 +103,6 @@
 </head>
 <body>
 
-<div id="cursor-glow"></div>
-
 <header>
   <div class="brand">
     <img src="https://lp.abouelela.com/wp-content/uploads/2026/03/abouelela_logo_cmyk.png" alt="abouelela">
@@ -136,8 +117,7 @@
 
   <section class="podcast">
     <div class="narrow center">
-      <span class="eyebrow reveal">Apropos weiterbringen</span>
-      <h2 class="reveal reveal-1">Kennst du schon meinen Podcast?</h2>
+      <h2 class="reveal">Kennst du schon meinen Podcast?</h2>
       <p class="lead reveal reveal-1">Die Sales Couch – mein Podcast mit ehrlichen Einblicken und praxiserprobten Tipps aus dem Vertriebsalltag. Kompakt, auf den Punkt und ohne Umschweife. Perfekt für unterwegs, wenn du im Auto sitzt und deine vertrieblichen Fähigkeiten weiter ausbauen möchtest.</p>
 
       <div class="podcast-cards reveal reveal-1">
@@ -172,11 +152,6 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
   document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-
-  window.addEventListener('mousemove', (e) => {
-    document.documentElement.style.setProperty('--mx', e.clientX + 'px');
-    document.documentElement.style.setProperty('--my', e.clientY + 'px');
-  });
 </script>
 
 </body>
