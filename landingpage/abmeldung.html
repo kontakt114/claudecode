@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schade, dass du gehst | abouelela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#d4af6a;
+    --gold-dark:#a87f3f;
+    --gold-bright:#f1cd86;
+
+    /* Light theme - top (goodbye) */
+    --l-bg:#f7f3ea;
+    --l-ink:#211d15;
+    --l-ink-soft:#6f6555;
+    --l-line:rgba(168,127,63,.25);
+    --l-panel:#ffffff;
+
+    /* Dark theme - bottom (podcast) */
+    --d-bg:#15151a;
+    --d-bg-deep:#050506;
+    --d-ink:#f3efe6;
+    --d-ink-soft:#a9a497;
+    --d-line:rgba(212,175,106,.2);
+    --d-panel:#1c1c22;
+
+    --radius:18px;
+    --shadow:0 24px 60px -24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Poppins',system-ui,sans-serif;
+    color:var(--l-ink);
+    background:var(--l-bg);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+  }
+  img{max-width:100%;display:block}
+  .wrap{max-width:1040px;margin:0 auto;padding-left:24px;padding-right:24px}
+  .narrow{max-width:640px;margin:0 auto;padding:0 24px}
+  main{flex:1}
+  section{padding:100px 0;position:relative}
+  h1,h2{font-family:'Poppins',sans-serif;font-weight:700;letter-spacing:-0.01em;line-height:1.2}
+  h1{font-size:clamp(2.1rem,4.2vw,3rem)}
+  h2{font-size:clamp(1.6rem,3vw,2.2rem)}
+  p.lead{font-size:1.08rem;color:var(--l-ink-soft);font-weight:400}
+  .center{text-align:center}
+
+  header{padding:26px 0;border-bottom:1px solid var(--l-line)}
+  .brand{display:flex;align-items:center;justify-content:center}
+  .brand img{height:50px;width:auto}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease, transform .8s ease}
+  .reveal.is-visible{opacity:1;transform:translateY(0)}
+  .reveal-1{transition-delay:.12s}
+
+  .hero{background:var(--l-bg);padding-bottom:50px}
+  .hero h1{margin:0 auto 20px;max-width:600px;color:var(--l-ink)}
+  .hero p.lead{max-width:520px;margin:0 auto}
+  .trust-note{margin-top:18px;font-size:.85rem;color:var(--l-ink-soft);letter-spacing:.01em}
+  .trust-note::before{content:'✓';color:var(--gold-dark);font-weight:700;margin-right:7px}
+
+  /* Podcast section - dark card floating on the cream page */
+  .podcast{background:var(--l-bg);padding-top:50px;position:relative}
+  .podcast::before{
+    content:'';position:absolute;left:50%;top:-70px;
+    transform:translateX(-50%);
+    width:min(720px,80%);height:220px;
+    background:radial-gradient(ellipse at 50% 100%, rgba(212,175,106,.28), rgba(212,175,106,.08) 55%, transparent 75%);
+    pointer-events:none;z-index:0;
+  }
+  .podcast-panel{position:relative;z-index:1}
+  .podcast-panel{
+    width:calc(100% - 32px);max-width:1100px;margin:0 auto;
+    background:var(--d-bg);
+    background-image:
+      radial-gradient(circle at 50% -10%, rgba(212,175,106,.14), transparent 55%),
+      radial-gradient(circle at 90% 100%, rgba(212,175,106,.07), transparent 50%);
+    color:var(--d-ink);border:1px solid var(--d-line);
+    border-radius:32px;
+    padding:90px 40px;
+  }
+  .podcast-top{
+    display:grid;grid-template-columns:180px 1fr;gap:44px;align-items:center;
+    max-width:760px;margin:0 auto;text-align:left;
+  }
+  .podcast-cover{
+    width:180px;height:180px;object-fit:cover;border-radius:22px;
+    box-shadow:0 30px 60px -22px rgba(0,0,0,.6), 0 0 0 1px var(--d-line);
+  }
+  .podcast-kicker{font-size:.85rem;color:var(--gold-bright);letter-spacing:.02em;margin-bottom:10px}
+  .podcast h2{color:var(--d-ink);text-align:left}
+  .podcast-top p.lead{margin-top:18px;max-width:none;text-align:left;color:var(--d-ink-soft)}
+
+  /* Apple Podcasts rating visualization */
+  .apple-ratings{display:flex;align-items:center;gap:32px;margin-top:26px}
+  .ar-score{
+    flex-shrink:0;text-align:center;
+    opacity:0;transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .apple-ratings.is-visible .ar-score{opacity:1;transform:translateY(0)}
+  .ar-score-num{font-size:2.5rem;font-weight:700;color:var(--d-ink);line-height:1;font-variant-numeric:tabular-nums}
+  .ar-score-label{font-size:.76rem;color:var(--d-ink-soft);margin-top:4px}
+  .ar-bars{flex:1;min-width:0}
+  .ar-row{
+    display:grid;grid-template-columns:60px 1fr;align-items:center;gap:12px;margin-bottom:9px;
+    opacity:0;transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .apple-ratings.is-visible .ar-row{opacity:1;transform:translateY(0)}
+  .ar-stars{font-size:.66rem;letter-spacing:1px;color:var(--gold);text-align:right;white-space:nowrap}
+  .ar-bar{height:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:visible;position:relative}
+  .ar-bar-fill{
+    display:block;height:100%;width:0%;border-radius:999px;position:relative;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold-bright));
+    transition:width .8s cubic-bezier(.22,.9,.32,1);
+  }
+  .ar-bar-fill::after{
+    content:'';position:absolute;top:50%;right:-3px;
+    width:9px;height:9px;margin-top:-4.5px;border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 12px 4px rgba(241,205,134,.85);
+    opacity:0;
+  }
+  .ar-bar-fill.is-zipping::after{animation:ar-spark .8s cubic-bezier(.22,.9,.32,1)}
+  @keyframes ar-spark{
+    0%{opacity:0}
+    12%{opacity:1}
+    80%{opacity:1}
+    100%{opacity:0}
+  }
+  .ar-count{text-align:right;font-size:.76rem;color:var(--d-ink-soft);margin-top:10px}
+  @media (prefers-reduced-motion:reduce){
+    .ar-score,.ar-row{transition:none}
+    .ar-bar-fill{transition:none}
+    .ar-bar-fill.is-zipping::after{animation:none}
+  }
+
+  .trailer{
+    display:flex;align-items:center;gap:22px;text-align:left;
+    max-width:600px;margin:48px auto 0;
+    background:var(--d-panel);border:1px solid var(--d-line);border-radius:20px;
+    padding:22px 28px;
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .trailer:hover{border-color:rgba(212,175,106,.4);box-shadow:0 24px 50px -26px rgba(212,175,106,.3)}
+  .trailer-play{
+    width:56px;height:56px;border-radius:50%;flex-shrink:0;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#f1e6c8,#cbb27f);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 14px 30px -14px rgba(212,175,106,.55);
+    transition:transform .2s ease;
+  }
+  .trailer-play:hover{transform:scale(1.06)}
+  .trailer-play svg{width:18px;height:18px}
+  .trailer-play .icon-pause{display:none}
+  .trailer-play.is-playing .icon-play{display:none}
+  .trailer-play.is-playing .icon-pause{display:block}
+  .trailer-body{flex:1;min-width:0}
+  .trailer-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-bright);font-weight:600;margin-bottom:4px}
+  .trailer-title{font-weight:600;color:var(--d-ink);font-size:.98rem;margin-bottom:14px;line-height:1.35}
+  .trailer-row{display:flex;align-items:center;gap:10px}
+  .trailer-time{font-size:.75rem;color:var(--d-ink-soft);font-variant-numeric:tabular-nums;min-width:34px}
+  .trailer-time.end{text-align:right}
+  .trailer-bar{
+    position:relative;flex:1;height:14px;display:flex;align-items:center;cursor:pointer;
+  }
+  .trailer-bar::before{
+    content:'';position:absolute;left:0;right:0;height:5px;border-radius:999px;
+    background:rgba(255,255,255,.1);
+  }
+  .trailer-bar-fill{
+    position:absolute;left:0;height:5px;border-radius:999px;width:0%;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold-bright));
+  }
+  .trailer-bar-handle{
+    position:absolute;left:0%;width:13px;height:13px;border-radius:50%;
+    background:#f9f1de;transform:translateX(-50%);
+    box-shadow:0 2px 8px rgba(0,0,0,.5);
+  }
+
+  .podcast-cards-heading{
+    text-align:center;margin-top:56px;font-size:1.5rem;font-weight:700;color:var(--d-ink);
+  }
+  .podcast-cards-heading span{font-weight:500;font-size:1.05rem;color:var(--d-ink-soft)}
+  .podcast-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:22px}
+  .podcast-everywhere{text-align:center;margin-top:20px;font-size:.85rem;color:var(--d-ink-soft)}
+  .podcast-card{
+    display:flex;flex-direction:column;align-items:center;gap:20px;
+    background:var(--d-panel);border:1px solid var(--d-line);border-radius:18px;
+    padding:32px 34px;width:220px;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .podcast-card:hover{
+    transform:translateY(-4px);border-color:rgba(212,175,106,.4);
+    box-shadow:0 24px 50px -22px rgba(212,175,106,.25);
+  }
+  .podcast-card img{height:56px;width:auto;border-radius:12px}
+  .podcast-card .platform{font-size:.92rem;font-weight:600;color:var(--d-ink)}
+  .btn-podcast{
+    display:inline-flex;align-items:center;justify-content:center;
+    background:#eadfc2;
+    color:var(--l-ink);font-weight:700;font-size:.92rem;
+    padding:13px 26px;border-radius:10px;text-decoration:none;width:100%;
+    box-shadow:0 14px 30px -16px rgba(212,175,106,.5);
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn-podcast:hover{
+    background:#f1e6c8;
+    transform:translateY(-2px);
+    box-shadow:0 18px 36px -16px rgba(212,175,106,.65);
+  }
+
+  footer{padding:34px 0;text-align:center;color:var(--l-ink-soft);font-size:.85rem;background:var(--l-bg)}
+  footer a{color:var(--l-ink-soft);text-decoration:none}
+  footer a:hover{color:var(--l-ink)}
+
+  @media (max-width:600px){
+    section{padding:70px 0}
+    .hero{padding-bottom:35px}
+    .podcast{padding-top:35px}
+    .podcast-top{grid-template-columns:1fr;text-align:center;justify-items:center}
+    .podcast h2,.podcast-top p.lead,.podcast-kicker{text-align:center}
+    .ratings{justify-content:center}
+    .trailer{padding:20px}
+    .podcast-panel{padding:60px 24px;border-radius:24px}
+  }
+  @media (max-width:460px){
+    .trailer{flex-direction:column;text-align:center}
+    .trailer-body{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="https://lp.abouelela.com/wp-content/uploads/2026/03/abouelela_logo_cmyk.png" alt="abouelela">
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap center">
+    <h1 class="reveal">Schade, dass du gehst.</h1>
+    <p class="lead reveal reveal-1">Ich respektiere deine Entscheidung. Du kannst dich jederzeit wieder anmelden, sobald du bereit dafür bist.</p>
+  </section>
+
+  <section class="podcast">
+   <div class="podcast-panel">
+    <div class="wrap center">
+      <div class="podcast-top reveal">
+        <img class="podcast-cover" src="https://lp.abouelela.com/wp-content/uploads/2026/08/ab6765630000ba8a58c3fadd44955a9c82e35472.jpeg" alt="Die Sales Couch">
+        <div>
+          <p class="podcast-kicker">Trotzdem nicht auf Tipps und Tricks für den Vertriebsalltag verzichten?</p>
+          <h2>Dann abonniere meinen Podcast.</h2>
+          <p class="lead">Die Sales Couch – mein Podcast mit ehrlichen Einblicken und praxiserprobten Tipps aus dem Vertriebsalltag. Kompakt, auf den Punkt und ohne Umschweife. Perfekt für unterwegs, wenn du im Auto sitzt und deine vertrieblichen Fähigkeiten weiter ausbauen möchtest.</p>
+          <div class="apple-ratings" id="appleRatings">
+            <div class="ar-score">
+              <div class="ar-score-num">4,9</div>
+              <div class="ar-score-label">von 5</div>
+            </div>
+            <div class="ar-bars">
+              <div class="ar-row">
+                <span class="ar-stars">★★★★★</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="96"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★★★★☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="1"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★★★☆☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="1"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★★☆☆☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="0"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★☆☆☆☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="2"></span></div>
+              </div>
+              <div class="ar-count">138 Bewertungen · Apple Podcasts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trailer reveal reveal-1">
+        <button class="trailer-play" id="trailerPlay" aria-label="Trailer abspielen">
+          <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#1a1306"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="#1a1306"/><rect x="14" y="5" width="4" height="14" rx="1" fill="#1a1306"/></svg>
+        </button>
+        <div class="trailer-body">
+          <div class="trailer-label">Trailer</div>
+          <div class="trailer-title">Was du von diesem Podcast erwarten kannst</div>
+          <div class="trailer-row">
+            <span class="trailer-time" id="trailerCurrent">0:00</span>
+            <div class="trailer-bar" id="trailerBar">
+              <div class="trailer-bar-fill" id="trailerFill"></div>
+              <div class="trailer-bar-handle" id="trailerHandle"></div>
+            </div>
+            <span class="trailer-time end" id="trailerDuration">0:00</span>
+          </div>
+        </div>
+        <audio id="trailerAudio" preload="metadata" src="https://lp.abouelela.com/wp-content/uploads/2026/08/podcast_16629_die_sales_couch_exzellenz_im_vertrieb_mit_tarek_abouelela_episode_1177265_trailer_oder_what_s_in_for_me_auphonic.mp3"></audio>
+      </div>
+
+      <h3 class="podcast-cards-heading reveal reveal-1">Jetzt abonnieren <span>(oder später anhören)</span></h3>
+      <div class="podcast-cards reveal reveal-1">
+        <div class="podcast-card">
+          <img src="https://lp.abouelela.com/wp-content/uploads/2026/08/external-podcasts-player-logotype-where-they-can-discover-and-listen-to-the-worlds-podcasts-logo-color-tal-revivo.jpg" alt="Apple Podcasts">
+          <span class="platform">Apple Podcasts</span>
+          <a class="btn-podcast" href="https://podcasts.apple.com/de/podcast/die-sales-couch-exzellenz-im-vertrieb-mit-tarek-abouelela/id1488313051" target="_blank" rel="noopener">Jetzt anhören</a>
+        </div>
+        <div class="podcast-card">
+          <img src="https://lp.abouelela.com/wp-content/uploads/2026/08/Spotify_logo_without_text.svg_.webp" alt="Spotify">
+          <span class="platform">Spotify</span>
+          <a class="btn-podcast" href="https://open.spotify.com/show/5sUT0LKuseJxsGAsh2kd4H?si=66caf29a41864e60" target="_blank" rel="noopener">Jetzt anhören</a>
+        </div>
+        <div class="podcast-card">
+          <img src="https://lp.abouelela.com/wp-content/uploads/2026/08/Amazon-Music-Logo-.webp" alt="Amazon Music">
+          <span class="platform">Amazon Music</span>
+          <a class="btn-podcast" href="https://music.amazon.com/podcasts/9a28f277-6ec1-4e68-bc13-e778bdc71c7c/die-sales-couch---exzellenz-im-vertrieb-mit-tarek-abouelela" target="_blank" rel="noopener">Jetzt anhören</a>
+        </div>
+      </div>
+      <p class="podcast-everywhere reveal reveal-1">...oder überall dort, wo es Podcasts gibt.</p>
+    </div>
+   </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 abouelela · <a href="https://abouelela.com/impressum" target="_blank" rel="noopener">Impressum</a> · <a href="https://abouelela.com/datenschutz" target="_blank" rel="noopener">Datenschutz</a></p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .bar-trigger').forEach((el) => observer.observe(el));
+
+  (function initAppleRatings() {
+    const root = document.getElementById('appleRatings');
+    if (!root) return;
+    const rows = root.querySelectorAll('.ar-row');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function reveal() {
+      root.classList.add('is-visible');
+      rows.forEach((row, i) => {
+        const fill = row.querySelector('.ar-bar-fill');
+        if (reduceMotion) {
+          row.style.transitionDelay = '0s';
+          fill.style.transition = 'none';
+          fill.style.width = fill.dataset.pct + '%';
+          return;
+        }
+        row.style.transitionDelay = '0ms';
+        fill.style.width = fill.dataset.pct + '%';
+        fill.classList.add('is-zipping');
+      });
+    }
+
+    const ratingsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          reveal();
+          ratingsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    ratingsObserver.observe(root);
+  })();
+
+  const audio = document.getElementById('trailerAudio');
+  const playBtn = document.getElementById('trailerPlay');
+  const bar = document.getElementById('trailerBar');
+  const fill = document.getElementById('trailerFill');
+  const handle = document.getElementById('trailerHandle');
+  const currentEl = document.getElementById('trailerCurrent');
+  const durationEl = document.getElementById('trailerDuration');
+
+  function formatTime(s) {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  function setProgress() {
+    const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    fill.style.width = pct + '%';
+    handle.style.left = pct + '%';
+    currentEl.textContent = formatTime(audio.currentTime);
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (audio.paused) { audio.play(); } else { audio.pause(); }
+  });
+  audio.addEventListener('play', () => playBtn.classList.add('is-playing'));
+  audio.addEventListener('pause', () => playBtn.classList.remove('is-playing'));
+  audio.addEventListener('ended', () => playBtn.classList.remove('is-playing'));
+  audio.addEventListener('loadedmetadata', () => { durationEl.textContent = formatTime(audio.duration); });
+  audio.addEventListener('timeupdate', setProgress);
+
+  function seek(e) {
+    const rect = bar.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const pct = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+    if (audio.duration) audio.currentTime = pct * audio.duration;
+    setProgress();
+  }
+  bar.addEventListener('click', seek);
+</script>
+
+</body>
+</html>
