@@ -112,7 +112,7 @@
   .ar-bar-fill{
     display:block;height:100%;width:0%;border-radius:999px;position:relative;
     background:linear-gradient(90deg,var(--gold-dark),var(--gold-bright));
-    transition:width .6s cubic-bezier(.22,.9,.32,1);
+    transition:width .4s cubic-bezier(.22,.9,.32,1);
   }
   .ar-bar-fill::after{
     content:'';position:absolute;top:50%;right:-3px;
@@ -121,7 +121,7 @@
     box-shadow:0 0 12px 4px rgba(241,205,134,.85);
     opacity:0;
   }
-  .ar-bar-fill.is-zipping::after{animation:ar-spark .6s cubic-bezier(.22,.9,.32,1)}
+  .ar-bar-fill.is-zipping::after{animation:ar-spark .4s cubic-bezier(.22,.9,.32,1)}
   @keyframes ar-spark{
     0%{opacity:0}
     12%{opacity:1}
@@ -347,12 +347,9 @@
           fill.style.width = fill.dataset.pct + '%';
           return;
         }
-        const delay = i * 150;
-        row.style.transitionDelay = delay + 'ms';
-        setTimeout(() => {
-          fill.style.width = fill.dataset.pct + '%';
-          fill.classList.add('is-zipping');
-        }, delay);
+        row.style.transitionDelay = '0ms';
+        fill.style.width = fill.dataset.pct + '%';
+        fill.classList.add('is-zipping');
       });
     }
 
