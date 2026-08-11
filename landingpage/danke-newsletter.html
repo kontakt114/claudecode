@@ -67,14 +67,17 @@
   .trust-note{margin-top:18px;font-size:.85rem;color:var(--l-ink-soft);letter-spacing:.01em}
   .trust-note::before{content:'✓';color:var(--gold-dark);font-weight:700;margin-right:7px}
 
-  /* Podcast section - dark, for contrast */
-  .podcast{
+  /* Podcast section - dark card floating on the cream page */
+  .podcast{background:var(--l-bg)}
+  .podcast-panel{
+    width:calc(100% - 32px);max-width:1100px;margin:0 auto;
     background:var(--d-bg);
     background-image:
       radial-gradient(circle at 50% -10%, rgba(212,175,106,.14), transparent 55%),
       radial-gradient(circle at 90% 100%, rgba(212,175,106,.07), transparent 50%);
-    color:var(--d-ink);border-top:1px solid var(--d-line);
-    border-bottom-left-radius:28px;border-bottom-right-radius:28px;
+    color:var(--d-ink);border:1px solid var(--d-line);
+    border-radius:32px;
+    padding:90px 40px;
   }
   .podcast-top{
     display:grid;grid-template-columns:180px 1fr;gap:44px;align-items:center;
@@ -87,18 +90,35 @@
   .podcast h2{color:var(--d-ink);text-align:left}
   .podcast-top p.lead{margin-top:18px;max-width:none;text-align:left;color:var(--d-ink-soft)}
 
-  .ratings{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:22px}
-  .rating-badge{display:inline-flex;align-items:center;gap:9px;font-size:.88rem;color:var(--d-ink-soft)}
-  .rating-badge .stars{color:var(--gold);font-size:.95rem;letter-spacing:1px}
-  .rating-badge strong{color:var(--d-ink);font-weight:700}
-  .rating-img{height:36px;width:auto;border-radius:8px}
-
-  .ratings .rating-badge,.ratings .rating-img{
-    clip-path:inset(0 100% 0 0);
-    transition:clip-path .9s cubic-bezier(.16,1,.3,1);
+  /* Apple Podcasts rating visualization */
+  .apple-ratings{display:flex;align-items:center;gap:32px;margin-top:26px}
+  .ar-score{
+    flex-shrink:0;text-align:center;
+    opacity:0;transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
   }
-  .ratings.is-visible .rating-badge{clip-path:inset(0 0 0 0)}
-  .ratings.is-visible .rating-img{clip-path:inset(0 0 0 0);transition-delay:.18s}
+  .apple-ratings.is-visible .ar-score{opacity:1;transform:translateY(0)}
+  .ar-score-num{font-size:2.5rem;font-weight:700;color:var(--d-ink);line-height:1;font-variant-numeric:tabular-nums}
+  .ar-score-label{font-size:.76rem;color:var(--d-ink-soft);margin-top:4px}
+  .ar-bars{flex:1;min-width:0}
+  .ar-row{
+    display:grid;grid-template-columns:60px 1fr;align-items:center;gap:12px;margin-bottom:9px;
+    opacity:0;transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .apple-ratings.is-visible .ar-row{opacity:1;transform:translateY(0)}
+  .ar-stars{font-size:.66rem;letter-spacing:1px;color:var(--gold);text-align:right;white-space:nowrap}
+  .ar-bar{height:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+  .ar-bar-fill{
+    display:block;height:100%;width:0%;border-radius:999px;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold-bright));
+    transition:width .85s cubic-bezier(.16,1,.3,1);
+  }
+  .ar-count{text-align:right;font-size:.76rem;color:var(--d-ink-soft);margin-top:10px}
+  @media (prefers-reduced-motion:reduce){
+    .ar-score,.ar-row{transition:none}
+    .ar-bar-fill{transition:none}
+  }
 
   .trailer{
     display:flex;align-items:center;gap:22px;text-align:left;
@@ -180,6 +200,7 @@
     .podcast h2,.podcast-top p.lead{text-align:center}
     .ratings{justify-content:center}
     .trailer{padding:20px}
+    .podcast-panel{padding:60px 24px;border-radius:24px}
   }
   @media (max-width:460px){
     .trailer{flex-direction:column;text-align:center}
@@ -203,18 +224,41 @@
   </section>
 
   <section class="podcast">
+   <div class="podcast-panel">
     <div class="wrap center">
       <div class="podcast-top reveal">
         <img class="podcast-cover" src="https://lp.abouelela.com/wp-content/uploads/2026/08/ab6765630000ba8a58c3fadd44955a9c82e35472.jpeg" alt="Die Sales Couch">
         <div>
           <h2>Kennst du schon meinen Podcast?</h2>
           <p class="lead">Die Sales Couch – mein Podcast mit ehrlichen Einblicken und praxiserprobten Tipps aus dem Vertriebsalltag. Kompakt, auf den Punkt und ohne Umschweife. Perfekt für unterwegs, wenn du im Auto sitzt und deine vertrieblichen Fähigkeiten weiter ausbauen möchtest.</p>
-          <div class="ratings bar-trigger">
-            <div class="rating-badge">
-              <span class="stars">★★★★★</span>
-              <span><strong>4,9</strong> · 122 Bewertungen (Apple Podcasts)</span>
+          <div class="apple-ratings" id="appleRatings">
+            <div class="ar-score">
+              <div class="ar-score-num">4,9</div>
+              <div class="ar-score-label">von 5</div>
             </div>
-            <img class="rating-img" src="https://lp.abouelela.com/wp-content/uploads/2026/08/Bewertungen-Sales-couch.webp" alt="4,9 Sterne bei Apple Podcasts">
+            <div class="ar-bars">
+              <div class="ar-row">
+                <span class="ar-stars">★★★★★</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="96"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★★★★☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="1"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★★★☆☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="1"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★★☆☆☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="0"></span></div>
+              </div>
+              <div class="ar-row">
+                <span class="ar-stars">★☆☆☆☆</span>
+                <div class="ar-bar"><span class="ar-bar-fill" data-pct="2"></span></div>
+              </div>
+              <div class="ar-count">138 Bewertungen · Apple Podcasts</div>
+            </div>
           </div>
         </div>
       </div>
@@ -252,6 +296,7 @@
         </div>
       </div>
     </div>
+   </div>
   </section>
 </main>
 
@@ -270,6 +315,39 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
   document.querySelectorAll('.reveal, .bar-trigger').forEach((el) => observer.observe(el));
+
+  (function initAppleRatings() {
+    const root = document.getElementById('appleRatings');
+    if (!root) return;
+    const rows = root.querySelectorAll('.ar-row');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function reveal() {
+      root.classList.add('is-visible');
+      rows.forEach((row, i) => {
+        const fill = row.querySelector('.ar-bar-fill');
+        if (reduceMotion) {
+          row.style.transitionDelay = '0s';
+          fill.style.transition = 'none';
+          fill.style.width = fill.dataset.pct + '%';
+          return;
+        }
+        const delay = i * 150;
+        row.style.transitionDelay = delay + 'ms';
+        setTimeout(() => { fill.style.width = fill.dataset.pct + '%'; }, delay);
+      });
+    }
+
+    const ratingsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          reveal();
+          ratingsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    ratingsObserver.observe(root);
+  })();
 
   const audio = document.getElementById('trailerAudio');
   const playBtn = document.getElementById('trailerPlay');
