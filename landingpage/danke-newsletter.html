@@ -68,7 +68,15 @@
   .trust-note::before{content:'✓';color:var(--gold-dark);font-weight:700;margin-right:7px}
 
   /* Podcast section - dark card floating on the cream page */
-  .podcast{background:var(--l-bg);padding-top:50px}
+  .podcast{background:var(--l-bg);padding-top:50px;position:relative}
+  .podcast::before{
+    content:'';position:absolute;left:50%;top:-70px;
+    transform:translateX(-50%);
+    width:min(720px,80%);height:220px;
+    background:radial-gradient(ellipse at 50% 100%, rgba(212,175,106,.28), rgba(212,175,106,.08) 55%, transparent 75%);
+    pointer-events:none;z-index:0;
+  }
+  .podcast-panel{position:relative;z-index:1}
   .podcast-panel{
     width:calc(100% - 32px);max-width:1100px;margin:0 auto;
     background:var(--d-bg);
