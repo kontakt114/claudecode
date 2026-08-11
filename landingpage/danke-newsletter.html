@@ -64,6 +64,8 @@
   .hero{background:var(--l-bg)}
   .hero h1{margin:0 auto 20px;max-width:600px;color:var(--l-ink)}
   .hero p.lead{max-width:520px;margin:0 auto}
+  .trust-note{margin-top:18px;font-size:.85rem;color:var(--l-ink-soft);letter-spacing:.01em}
+  .trust-note::before{content:'✓';color:var(--gold-dark);font-weight:700;margin-right:7px}
 
   /* Podcast section - dark, for contrast */
   .podcast{
@@ -83,6 +85,12 @@
   }
   .podcast h2{color:var(--d-ink);text-align:left}
   .podcast-top p.lead{margin-top:18px;max-width:none;text-align:left;color:var(--d-ink-soft)}
+
+  .ratings{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:22px}
+  .rating-badge{display:inline-flex;align-items:center;gap:9px;font-size:.88rem;color:var(--d-ink-soft)}
+  .rating-badge .stars{color:var(--gold);font-size:.95rem;letter-spacing:1px}
+  .rating-badge strong{color:var(--d-ink);font-weight:700}
+  .rating-img{height:36px;width:auto;border-radius:8px}
 
   .podcast-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:56px}
   .podcast-card{
@@ -118,6 +126,7 @@
     section{padding:70px 0}
     .podcast-top{grid-template-columns:1fr;text-align:center;justify-items:center}
     .podcast h2,.podcast-top p.lead{text-align:center}
+    .ratings{justify-content:center}
   }
 </style>
 </head>
@@ -133,6 +142,7 @@
   <section class="hero wrap center">
     <h1 class="reveal">Schön, dass du dabei bleibst.</h1>
     <p class="lead reveal reveal-1">Vielen Dank, dass du dich entschieden hast, im Newsletter zu bleiben. Ich verspreche dir: Es erwartet dich eine Menge wertvoller Impulse, die dich in deinem Vertriebsalltag spürbar weiterbringen.</p>
+    <p class="trust-note reveal reveal-1">1–2 E-Mails im Monat, kein Spam</p>
   </section>
 
   <section class="podcast">
@@ -142,6 +152,13 @@
         <div>
           <h2>Kennst du schon meinen Podcast?</h2>
           <p class="lead">Die Sales Couch – mein Podcast mit ehrlichen Einblicken und praxiserprobten Tipps aus dem Vertriebsalltag. Kompakt, auf den Punkt und ohne Umschweife. Perfekt für unterwegs, wenn du im Auto sitzt und deine vertrieblichen Fähigkeiten weiter ausbauen möchtest.</p>
+          <div class="ratings">
+            <div class="rating-badge">
+              <span class="stars">★★★★★</span>
+              <span><strong>4,9</strong> · 122 Bewertungen (Spotify)</span>
+            </div>
+            <img class="rating-img" src="https://lp.abouelela.com/wp-content/uploads/2026/08/Bewertungen-Sales-couch.webp" alt="4,9 Sterne bei Apple Podcasts">
+          </div>
         </div>
       </div>
 
