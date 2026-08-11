@@ -99,6 +99,49 @@
   .ratings.is-visible .rating-badge{clip-path:inset(0 0 0 0)}
   .ratings.is-visible .rating-img{clip-path:inset(0 0 0 0);transition-delay:.18s}
 
+  .trailer{
+    display:flex;align-items:center;gap:22px;text-align:left;
+    max-width:600px;margin:48px auto 0;
+    background:var(--d-panel);border:1px solid var(--d-line);border-radius:20px;
+    padding:22px 28px;
+    transition:border-color .3s ease, box-shadow .3s ease;
+  }
+  .trailer:hover{border-color:rgba(212,175,106,.4);box-shadow:0 24px 50px -26px rgba(212,175,106,.3)}
+  .trailer-play{
+    width:56px;height:56px;border-radius:50%;flex-shrink:0;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#f1e6c8,#cbb27f);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 14px 30px -14px rgba(212,175,106,.55);
+    transition:transform .2s ease;
+  }
+  .trailer-play:hover{transform:scale(1.06)}
+  .trailer-play svg{width:18px;height:18px}
+  .trailer-play .icon-pause{display:none}
+  .trailer-play.is-playing .icon-play{display:none}
+  .trailer-play.is-playing .icon-pause{display:block}
+  .trailer-body{flex:1;min-width:0}
+  .trailer-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-bright);font-weight:600;margin-bottom:4px}
+  .trailer-title{font-weight:600;color:var(--d-ink);font-size:.98rem;margin-bottom:14px;line-height:1.35}
+  .trailer-row{display:flex;align-items:center;gap:10px}
+  .trailer-time{font-size:.75rem;color:var(--d-ink-soft);font-variant-numeric:tabular-nums;min-width:34px}
+  .trailer-time.end{text-align:right}
+  .trailer-bar{
+    position:relative;flex:1;height:14px;display:flex;align-items:center;cursor:pointer;
+  }
+  .trailer-bar::before{
+    content:'';position:absolute;left:0;right:0;height:5px;border-radius:999px;
+    background:rgba(255,255,255,.1);
+  }
+  .trailer-bar-fill{
+    position:absolute;left:0;height:5px;border-radius:999px;width:0%;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold-bright));
+  }
+  .trailer-bar-handle{
+    position:absolute;left:0%;width:13px;height:13px;border-radius:50%;
+    background:#f9f1de;transform:translateX(-50%);
+    box-shadow:0 2px 8px rgba(0,0,0,.5);
+  }
+
   .podcast-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:56px}
   .podcast-card{
     display:flex;flex-direction:column;align-items:center;gap:20px;
@@ -134,6 +177,11 @@
     .podcast-top{grid-template-columns:1fr;text-align:center;justify-items:center}
     .podcast h2,.podcast-top p.lead{text-align:center}
     .ratings{justify-content:center}
+    .trailer{padding:20px}
+  }
+  @media (max-width:460px){
+    .trailer{flex-direction:column;text-align:center}
+    .trailer-body{width:100%}
   }
 </style>
 </head>
@@ -169,6 +217,26 @@
         </div>
       </div>
 
+      <div class="trailer reveal reveal-1">
+        <button class="trailer-play" id="trailerPlay" aria-label="Trailer abspielen">
+          <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#1a1306"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="#1a1306"/><rect x="14" y="5" width="4" height="14" rx="1" fill="#1a1306"/></svg>
+        </button>
+        <div class="trailer-body">
+          <div class="trailer-label">Trailer</div>
+          <div class="trailer-title">Was du von diesem Podcast erwarten kannst</div>
+          <div class="trailer-row">
+            <span class="trailer-time" id="trailerCurrent">0:00</span>
+            <div class="trailer-bar" id="trailerBar">
+              <div class="trailer-bar-fill" id="trailerFill"></div>
+              <div class="trailer-bar-handle" id="trailerHandle"></div>
+            </div>
+            <span class="trailer-time end" id="trailerDuration">0:00</span>
+          </div>
+        </div>
+        <audio id="trailerAudio" preload="metadata" src="https://lp.abouelela.com/wp-content/uploads/2026/08/podcast_16629_die_sales_couch_exzellenz_im_vertrieb_mit_tarek_abouelela_episode_1177265_trailer_oder_what_s_in_for_me_auphonic.mp3"></audio>
+      </div>
+
       <div class="podcast-cards reveal reveal-1">
         <div class="podcast-card">
           <img src="https://lp.abouelela.com/wp-content/uploads/2026/08/external-podcasts-player-logotype-where-they-can-discover-and-listen-to-the-worlds-podcasts-logo-color-tal-revivo.jpg" alt="Apple Podcasts">
@@ -201,6 +269,46 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
   document.querySelectorAll('.reveal, .bar-trigger').forEach((el) => observer.observe(el));
+
+  const audio = document.getElementById('trailerAudio');
+  const playBtn = document.getElementById('trailerPlay');
+  const bar = document.getElementById('trailerBar');
+  const fill = document.getElementById('trailerFill');
+  const handle = document.getElementById('trailerHandle');
+  const currentEl = document.getElementById('trailerCurrent');
+  const durationEl = document.getElementById('trailerDuration');
+
+  function formatTime(s) {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  function setProgress() {
+    const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    fill.style.width = pct + '%';
+    handle.style.left = pct + '%';
+    currentEl.textContent = formatTime(audio.currentTime);
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (audio.paused) { audio.play(); } else { audio.pause(); }
+  });
+  audio.addEventListener('play', () => playBtn.classList.add('is-playing'));
+  audio.addEventListener('pause', () => playBtn.classList.remove('is-playing'));
+  audio.addEventListener('ended', () => playBtn.classList.remove('is-playing'));
+  audio.addEventListener('loadedmetadata', () => { durationEl.textContent = formatTime(audio.duration); });
+  audio.addEventListener('timeupdate', setProgress);
+
+  function seek(e) {
+    const rect = bar.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const pct = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+    if (audio.duration) audio.currentTime = pct * audio.duration;
+    setProgress();
+  }
+  bar.addEventListener('click', seek);
 </script>
 
 </body>
