@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitte bestätige deine E-Mail-Adresse | abouelela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f3efe6;
+    --ink-soft:#a9a497;
+    --paper:#0a0a0c;
+    --panel:#121215;
+    --accent:#d4af6a;
+    --accent-dark:#a87f3f;
+    --accent-bright:#f1cd86;
+    --line:rgba(212,175,106,.18);
+    --radius:18px;
+    --shadow:0 24px 60px -24px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(212,175,106,.07), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(212,175,106,.05), transparent 50%);
+    background-attachment:fixed;
+    line-height:1.6;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding-left:24px;padding-right:24px;width:100%}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:.01em;line-height:1.18;color:var(--ink);font-size:clamp(1.9rem,4.2vw,2.7rem)}
+  p.lead{font-size:1.08rem;color:var(--ink-soft)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent-bright);background:rgba(212,175,106,.08);border:1px solid var(--line);
+    padding:9px 18px;border-radius:999px;
+  }
+  .eyebrow::before,.eyebrow::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent-dark));
+    color:#1a1306;font-weight:700;font-size:1.02rem;font-family:'Plus Jakarta Sans',sans-serif;
+    padding:16px 32px;border-radius:10px;text-decoration:none;letter-spacing:.01em;
+    box-shadow:0 16px 36px -12px rgba(212,175,106,.4);
+    border:none;cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 20px 42px -12px rgba(212,175,106,.55)}
+  .btn.ghost{background:none;box-shadow:none;color:var(--ink-soft);border:1px solid var(--line);padding:14px 30px}
+  .btn.ghost:hover{color:var(--ink);border-color:var(--accent);transform:none}
+
+  header{padding:30px 0;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;justify-content:center;gap:14px}
+  .brand .logo{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent-bright),var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:#1a1306;font-weight:800;font-size:1.1rem;font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .brand .name{font-size:1.4rem;font-weight:700;font-family:'Cormorant Garamond',serif;letter-spacing:.03em}
+  .brand .tag{display:block;font-size:.72rem;color:var(--ink-soft);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+
+  main{flex:1;display:flex;align-items:center;padding:70px 0}
+  .confirm-card{
+    max-width:600px;margin:0 auto;text-align:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:24px;
+    padding:56px 44px;box-shadow:var(--shadow);
+  }
+  .mail-icon{
+    width:78px;height:78px;margin:0 auto 30px;border-radius:50%;
+    background:rgba(212,175,106,.1);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mail-icon svg{width:34px;height:34px}
+  .confirm-card h1{margin:0 auto 18px}
+  .confirm-card p.lead{margin:0 auto 8px;max-width:440px;margin-left:auto;margin-right:auto}
+  .confirm-card .email{color:var(--accent-bright);font-weight:700}
+  .steps{
+    list-style:none;text-align:left;margin:34px 0;display:flex;flex-direction:column;gap:14px;
+  }
+  .steps li{
+    display:flex;gap:14px;align-items:flex-start;color:var(--ink-soft);font-size:.94rem;
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  }
+  .steps li .num{
+    flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(212,175,106,.12);
+    color:var(--accent-bright);font-weight:700;font-size:.82rem;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hint{
+    margin-top:30px;font-size:.85rem;color:var(--ink-soft);
+    border-top:1px solid var(--line);padding-top:24px;
+  }
+  .hint a{color:var(--accent-bright);text-decoration:none}
+  .hint a:hover{text-decoration:underline}
+  .actions{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  footer{padding:34px 0;text-align:center;color:var(--ink-soft);font-size:.85rem}
+  footer a{color:var(--ink-soft);text-decoration:none;margin:0 12px}
+
+  @media (max-width:600px){
+    .confirm-card{padding:44px 26px}
+    .actions{flex-direction:column;align-items:stretch}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <span class="name">abouelela</span>
+      <span class="tag">Wir machen Champions</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="confirm-card">
+      <div class="mail-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d4af6a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2.5"></rect>
+          <path d="M2.5 6.5l9.5 7 9.5-7"></path>
+        </svg>
+      </div>
+
+      <span class="eyebrow">Fast geschafft</span>
+      <h1 style="margin-top:20px">Bitte bestätige deine E-Mail-Adresse</h1>
+      <p class="lead">Wir haben dir gerade eine E-Mail geschickt. Klicke auf den Bestätigungslink darin, um deine Anfrage endgültig abzuschließen.</p>
+
+      <ul class="steps">
+        <li><span class="num">1</span> Öffne dein E-Mail-Postfach.</li>
+        <li><span class="num">2</span> Suche die E-Mail von uns – der Betreff enthält „Bestätigung“.</li>
+        <li><span class="num">3</span> Klicke auf den Link in der E-Mail und bestätige deine Anmeldung.</li>
+      </ul>
+
+      <div class="hint">
+        Keine E-Mail angekommen? Schau in deinem Spam- oder Werbeordner nach. Wenn sie nach ein paar Minuten immer noch fehlt, melde dich einfach bei <a href="mailto:kontakt@abouelela.de">kontakt@abouelela.de</a>.
+      </div>
+
+      <div class="actions">
+        <a href="index.html" class="btn ghost">Zurück zur Startseite</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <a href="#">Impressum</a>
+  <a href="#">Datenschutz</a>
+</footer>
+
+</body>
+</html>

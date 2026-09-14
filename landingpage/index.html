@@ -76,7 +76,7 @@
     background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%), rgba(212,175,106,.10), transparent 70%);
     transition:background .15s ease-out;
   }
-  body > *:not(#cursor-glow):not(.sticky-cta){position:relative;z-index:1}
+  body > *:not(#cursor-glow):not(.sticky-cta):not(.optin-overlay){position:relative;z-index:1}
 
   /* Sticky CTA */
   .sticky-cta{
@@ -247,6 +247,54 @@
     .struktur,.compare,.audience,.t-grid,.grid2{grid-template-columns:1fr}
     section{padding:80px 0}
   }
+
+  /* Double-Optin popup */
+  .optin-overlay{
+    position:fixed;inset:0;z-index:100;
+    background:rgba(5,5,6,.82);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;opacity:0;pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .optin-overlay.show{opacity:1;pointer-events:auto}
+  .optin-card{
+    position:relative;max-width:520px;width:100%;text-align:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:24px;
+    padding:52px 40px;box-shadow:var(--shadow);
+    transform:translateY(24px) scale(.97);opacity:0;
+    transition:transform .35s ease, opacity .35s ease;
+  }
+  .optin-overlay.show .optin-card{transform:translateY(0) scale(1);opacity:1}
+  .optin-close{
+    position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+    font-size:1.1rem;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .optin-close:hover{color:var(--ink);border-color:var(--accent)}
+  .mail-icon{
+    width:70px;height:70px;margin:0 auto 26px;border-radius:50%;
+    background:rgba(212,175,106,.1);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mail-icon svg{width:30px;height:30px}
+  .optin-card h3{font-size:1.5rem;margin:0 auto 14px}
+  .optin-card p.lead{font-size:1rem;margin:0 auto 6px;max-width:400px;margin-left:auto;margin-right:auto}
+  .optin-steps{list-style:none;text-align:left;margin:28px 0 6px;display:flex;flex-direction:column;gap:12px}
+  .optin-steps li{
+    display:flex;gap:12px;align-items:flex-start;color:var(--ink-soft);font-size:.9rem;
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  }
+  .optin-steps li .num{
+    flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(212,175,106,.12);
+    color:var(--accent-bright);font-weight:700;font-size:.78rem;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .optin-hint{margin-top:24px;font-size:.82rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:20px}
+  .optin-hint a{color:var(--accent-bright);text-decoration:none}
+  .optin-hint a:hover{text-decoration:underline}
+  @media (max-width:600px){.optin-card{padding:40px 24px}}
 </style>
 </head>
 <body>
@@ -414,7 +462,7 @@
     <h2>Wenn du Klarheit willst, ist das dein nächster Schritt.</h2>
     <p class="lead">Bewirb dich für die vertriebliche Standortbestimmung mit uns. Jede Anfrage wird individuell geprüft. Du erhältst im Anschluss zeitnah eine E-Mail von unserem Team und wir finden heraus, ob die vertriebliche Standortbestimmung für dich geeignet ist.</p>
 
-    <form class="form-card reveal" onsubmit="return false">
+    <form class="form-card reveal" id="optinForm">
       <div class="grid2">
         <div class="field">
           <label>Vorname</label>
@@ -427,7 +475,7 @@
       </div>
       <div class="field">
         <label>E-Mail</label>
-        <input type="email" placeholder="E-Mail" required>
+        <input type="email" id="optinEmail" placeholder="E-Mail" required>
       </div>
       <div class="grid2">
         <div class="field">
@@ -447,6 +495,29 @@
     </form>
   </div>
 </section>
+
+<div class="optin-overlay" id="optinOverlay">
+  <div class="optin-card">
+    <button type="button" class="optin-close" id="optinClose" aria-label="Schließen">&times;</button>
+    <div class="mail-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d4af6a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2.5"></rect>
+        <path d="M2.5 6.5l9.5 7 9.5-7"></path>
+      </svg>
+    </div>
+    <span class="eyebrow">Fast geschafft</span>
+    <h3 style="margin-top:18px">Bitte bestätige deine E-Mail-Adresse</h3>
+    <p class="lead">Wir haben gerade eine E-Mail an <strong id="optinEmailOut" style="color:var(--accent-bright)"></strong> geschickt. Klicke auf den Bestätigungslink darin, um deine Anfrage endgültig abzuschließen.</p>
+    <ul class="optin-steps">
+      <li><span class="num">1</span> Öffne dein E-Mail-Postfach.</li>
+      <li><span class="num">2</span> Suche die E-Mail von uns – der Betreff enthält „Bestätigung“.</li>
+      <li><span class="num">3</span> Klicke auf den Link in der E-Mail und bestätige deine Anmeldung.</li>
+    </ul>
+    <div class="optin-hint">
+      Keine E-Mail angekommen? Schau in deinem Spam- oder Werbeordner nach. Wenn sie nach ein paar Minuten immer noch fehlt, melde dich bei <a href="mailto:kontakt@abouelela.de">kontakt@abouelela.de</a>.
+    </div>
+  </div>
+</div>
 
 <footer>
   <a href="#">Impressum</a>
@@ -529,6 +600,27 @@
   }
   window.addEventListener('scroll', () => requestAnimationFrame(updateMorph));
   updateMorph();
+
+  const optinForm = document.getElementById('optinForm');
+  const optinOverlay = document.getElementById('optinOverlay');
+  const optinClose = document.getElementById('optinClose');
+  optinForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!optinForm.checkValidity()) {
+      optinForm.reportValidity();
+      return;
+    }
+    document.getElementById('optinEmailOut').textContent = document.getElementById('optinEmail').value;
+    optinOverlay.classList.add('show');
+  });
+  function closeOptin() { optinOverlay.classList.remove('show'); }
+  optinClose.addEventListener('click', closeOptin);
+  optinOverlay.addEventListener('click', (e) => {
+    if (e.target === optinOverlay) closeOptin();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeOptin();
+  });
 
   // Elementor (und andere Page-Builder) setzen auf Wrapper-Elementen oft
   // overflow:hidden, transform, will-change, filter oder contain. Jede
