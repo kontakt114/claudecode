@@ -248,10 +248,17 @@
     section{padding:80px 0}
   }
 
-  /* Double-Optin popup */
+  /* Double-Optin popup (eigenes helles Theme, unabhängig von den dunklen Seitenvariablen) */
   .optin-overlay{
+    --o-ink:#221f1a;
+    --o-ink-soft:#726f66;
+    --o-paper:#f1efe9;
+    --o-panel:#ffffff;
+    --o-accent:#c79a52;
+    --o-accent-bright:#a8763a;
+    --o-line:rgba(30,25,15,.1);
     position:fixed;inset:0;z-index:100;
-    background:rgba(5,5,6,.82);backdrop-filter:blur(6px);
+    background:rgba(241,239,233,.92);backdrop-filter:blur(6px);
     display:flex;align-items:center;justify-content:center;
     padding:24px;opacity:0;pointer-events:none;
     transition:opacity .3s ease;
@@ -259,40 +266,43 @@
   .optin-overlay.show{opacity:1;pointer-events:auto}
   .optin-card{
     position:relative;max-width:520px;width:100%;text-align:center;
-    background:var(--panel);border:1px solid var(--line);border-radius:24px;
-    padding:52px 40px;box-shadow:var(--shadow);
+    background:var(--o-panel);color:var(--o-ink);border:1px solid var(--o-line);border-radius:24px;
+    padding:52px 40px;box-shadow:0 24px 60px -24px rgba(30,25,15,.25);
     transform:translateY(24px) scale(.97);opacity:0;
     transition:transform .35s ease, opacity .35s ease;
   }
   .optin-overlay.show .optin-card{transform:translateY(0) scale(1);opacity:1}
+  .optin-card h3{color:var(--o-ink)}
+  .optin-card p.lead{color:var(--o-ink-soft)}
+  .optin-card .eyebrow{color:var(--o-accent-bright);background:rgba(199,154,82,.12);border-color:var(--o-line)}
   .optin-close{
     position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;
-    border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+    border:1px solid var(--o-line);background:transparent;color:var(--o-ink-soft);
     font-size:1.1rem;line-height:1;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
     transition:color .2s ease, border-color .2s ease;
   }
-  .optin-close:hover{color:var(--ink);border-color:var(--accent)}
-  .mail-icon{
+  .optin-close:hover{color:var(--o-ink);border-color:var(--o-accent)}
+  .optin-card .mail-icon{
     width:70px;height:70px;margin:0 auto 26px;border-radius:50%;
-    background:rgba(212,175,106,.1);border:1px solid var(--line);
+    background:rgba(199,154,82,.12);border:1px solid var(--o-line);
     display:flex;align-items:center;justify-content:center;
   }
-  .mail-icon svg{width:30px;height:30px}
+  .optin-card .mail-icon svg{width:30px;height:30px}
   .optin-card h3{font-size:1.5rem;margin:0 auto 14px}
   .optin-card p.lead{font-size:1rem;margin:0 auto 6px;max-width:400px;margin-left:auto;margin-right:auto}
   .optin-steps{list-style:none;text-align:left;margin:28px 0 6px;display:flex;flex-direction:column;gap:12px}
   .optin-steps li{
-    display:flex;gap:12px;align-items:flex-start;color:var(--ink-soft);font-size:.9rem;
-    background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+    display:flex;gap:12px;align-items:flex-start;color:var(--o-ink-soft);font-size:.9rem;
+    background:var(--o-paper);border:1px solid var(--o-line);border-radius:12px;padding:14px 16px;
   }
   .optin-steps li .num{
-    flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(212,175,106,.12);
-    color:var(--accent-bright);font-weight:700;font-size:.78rem;
+    flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(199,154,82,.16);
+    color:var(--o-accent-bright);font-weight:700;font-size:.78rem;
     display:flex;align-items:center;justify-content:center;
   }
-  .optin-hint{margin-top:24px;font-size:.82rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:20px}
-  .optin-hint a{color:var(--accent-bright);text-decoration:none}
+  .optin-hint{margin-top:24px;font-size:.82rem;color:var(--o-ink-soft);border-top:1px solid var(--o-line);padding-top:20px}
+  .optin-hint a{color:var(--o-accent-bright);text-decoration:none}
   .optin-hint a:hover{text-decoration:underline}
   @media (max-width:600px){.optin-card{padding:40px 24px}}
 </style>
@@ -500,14 +510,14 @@
   <div class="optin-card">
     <button type="button" class="optin-close" id="optinClose" aria-label="Schließen">&times;</button>
     <div class="mail-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#d4af6a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#a8763a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="4" width="20" height="16" rx="2.5"></rect>
         <path d="M2.5 6.5l9.5 7 9.5-7"></path>
       </svg>
     </div>
     <span class="eyebrow">Fast geschafft</span>
     <h3 style="margin-top:18px">Bitte bestätige deine E-Mail-Adresse</h3>
-    <p class="lead">Wir haben gerade eine E-Mail an <strong id="optinEmailOut" style="color:var(--accent-bright)"></strong> geschickt. Klicke auf den Bestätigungslink darin, um deine Anfrage endgültig abzuschließen.</p>
+    <p class="lead">Wir haben gerade eine E-Mail an <strong id="optinEmailOut" style="color:var(--o-accent-bright)"></strong> geschickt. Klicke auf den Bestätigungslink darin, um deine Anfrage endgültig abzuschließen.</p>
     <ul class="optin-steps">
       <li><span class="num">1</span> Öffne dein E-Mail-Postfach.</li>
       <li><span class="num">2</span> Suche die E-Mail von uns – der Betreff enthält „Bestätigung“.</li>

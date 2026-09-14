@@ -9,16 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#f3efe6;
-    --ink-soft:#a9a497;
-    --paper:#0a0a0c;
-    --panel:#121215;
-    --accent:#d4af6a;
+    --ink:#221f1a;
+    --ink-soft:#726f66;
+    --paper:#f1efe9;
+    --panel:#ffffff;
+    --accent:#c79a52;
     --accent-dark:#a87f3f;
-    --accent-bright:#f1cd86;
-    --line:rgba(212,175,106,.18);
+    --accent-bright:#a8763a;
+    --line:rgba(30,25,15,.1);
     --radius:18px;
-    --shadow:0 24px 60px -24px rgba(0,0,0,.7);
+    --shadow:0 24px 60px -24px rgba(30,25,15,.18);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -26,8 +26,8 @@
     color:var(--ink);
     background:var(--paper);
     background-image:
-      radial-gradient(circle at 15% 0%, rgba(212,175,106,.07), transparent 45%),
-      radial-gradient(circle at 85% 30%, rgba(212,175,106,.05), transparent 50%);
+      radial-gradient(circle at 15% 0%, rgba(199,154,82,.10), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(199,154,82,.07), transparent 50%);
     background-attachment:fixed;
     line-height:1.6;
     min-height:100vh;
@@ -40,7 +40,7 @@
   .eyebrow{
     display:inline-flex;align-items:center;gap:10px;
     font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--accent-bright);background:rgba(212,175,106,.08);border:1px solid var(--line);
+    color:var(--accent-bright);background:rgba(199,154,82,.12);border:1px solid var(--line);
     padding:9px 18px;border-radius:999px;
   }
   .eyebrow::before,.eyebrow::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
@@ -76,7 +76,7 @@
   }
   .mail-icon{
     width:78px;height:78px;margin:0 auto 30px;border-radius:50%;
-    background:rgba(212,175,106,.1);border:1px solid var(--line);
+    background:rgba(199,154,82,.12);border:1px solid var(--line);
     display:flex;align-items:center;justify-content:center;
   }
   .mail-icon svg{width:34px;height:34px}
@@ -91,7 +91,7 @@
     background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
   }
   .steps li .num{
-    flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(212,175,106,.12);
+    flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(199,154,82,.15);
     color:var(--accent-bright);font-weight:700;font-size:.82rem;
     display:flex;align-items:center;justify-content:center;
   }
@@ -128,7 +128,7 @@
   <div class="wrap">
     <div class="confirm-card">
       <div class="mail-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#d4af6a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a8763a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2.5"></rect>
           <path d="M2.5 6.5l9.5 7 9.5-7"></path>
         </svg>
