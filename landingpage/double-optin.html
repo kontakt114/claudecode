@@ -37,13 +37,6 @@
   .wrap{max-width:1040px;margin:0 auto;padding-left:24px;padding-right:24px;width:100%}
   h1{font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:.01em;line-height:1.18;color:var(--ink);font-size:clamp(1.9rem,4.2vw,2.7rem)}
   p.lead{font-size:1.08rem;color:var(--ink-soft)}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:10px;
-    font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--accent-bright);background:rgba(199,154,82,.12);border:1px solid var(--line);
-    padding:9px 18px;border-radius:999px;
-  }
-  .eyebrow::before,.eyebrow::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent)}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
     background:linear-gradient(135deg,var(--accent-bright),var(--accent-dark));
@@ -74,12 +67,6 @@
     background:var(--panel);border:1px solid var(--line);border-radius:24px;
     padding:56px 44px;box-shadow:var(--shadow);
   }
-  .mail-icon{
-    width:78px;height:78px;margin:0 auto 30px;border-radius:50%;
-    background:rgba(199,154,82,.12);border:1px solid var(--line);
-    display:flex;align-items:center;justify-content:center;
-  }
-  .mail-icon svg{width:34px;height:34px}
   .confirm-card h1{margin:0 auto 18px}
   .confirm-card p.lead{margin:0 auto 8px;max-width:440px;margin-left:auto;margin-right:auto}
   .confirm-card .email{color:var(--accent-bright);font-weight:700}
@@ -115,15 +102,7 @@
 <main>
   <div class="wrap">
     <div class="confirm-card">
-      <div class="mail-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#a8763a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2.5"></rect>
-          <path d="M2.5 6.5l9.5 7 9.5-7"></path>
-        </svg>
-      </div>
-
-      <span class="eyebrow">Fast geschafft</span>
-      <h1 style="margin-top:20px">Bitte bestätige deine E-Mail-Adresse</h1>
+      <h1>Bitte bestätige deine E-Mail-Adresse</h1>
       <p class="lead">Wir haben dir gerade eine E-Mail geschickt. Klicke auf den Bestätigungslink darin, um deine Anfrage endgültig abzuschließen.</p>
 
       <div class="hint" style="margin-top:34px">

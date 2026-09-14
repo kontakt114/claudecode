@@ -274,7 +274,6 @@
   .optin-overlay.show .optin-card{transform:translateY(0) scale(1);opacity:1}
   .optin-card h3{color:var(--o-ink)}
   .optin-card p.lead{color:var(--o-ink-soft)}
-  .optin-card .eyebrow{color:var(--o-accent-bright);background:rgba(199,154,82,.12);border-color:var(--o-line)}
   .optin-close{
     position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;
     border:1px solid var(--o-line);background:transparent;color:var(--o-ink-soft);
@@ -283,12 +282,6 @@
     transition:color .2s ease, border-color .2s ease;
   }
   .optin-close:hover{color:var(--o-ink);border-color:var(--o-accent)}
-  .optin-card .mail-icon{
-    width:70px;height:70px;margin:0 auto 26px;border-radius:50%;
-    background:rgba(199,154,82,.12);border:1px solid var(--o-line);
-    display:flex;align-items:center;justify-content:center;
-  }
-  .optin-card .mail-icon svg{width:30px;height:30px}
   .optin-card h3{font-size:1.5rem;margin:0 auto 14px}
   .optin-card p.lead{font-size:1rem;margin:0 auto 6px;max-width:400px;margin-left:auto;margin-right:auto}
   .optin-hint{margin-top:24px;font-size:.82rem;color:var(--o-ink-soft);border-top:1px solid var(--o-line);padding-top:20px}
@@ -499,14 +492,7 @@
 <div class="optin-overlay" id="optinOverlay">
   <div class="optin-card">
     <button type="button" class="optin-close" id="optinClose" aria-label="Schließen">&times;</button>
-    <div class="mail-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#a8763a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2.5"></rect>
-        <path d="M2.5 6.5l9.5 7 9.5-7"></path>
-      </svg>
-    </div>
-    <span class="eyebrow">Fast geschafft</span>
-    <h3 style="margin-top:18px">Bitte bestätige deine E-Mail-Adresse</h3>
+    <h3>Bitte bestätige deine E-Mail-Adresse</h3>
     <p class="lead">Wir haben gerade eine E-Mail an <strong id="optinEmailOut" style="color:var(--o-accent-bright)"></strong> geschickt. Klicke auf den Bestätigungslink darin, um deine Anfrage endgültig abzuschließen.</p>
     <div class="optin-hint" style="margin-top:28px">
       Keine E-Mail angekommen? Schau in deinem Spam- oder Werbeordner nach. Wenn sie nach ein paar Minuten immer noch fehlt, melde dich bei <a href="mailto:kontakt@abouelela.de">kontakt@abouelela.de</a>.
