@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bestätigt | abouelela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#221f1a;
+    --ink-soft:#726f66;
+    --paper:#f1efe9;
+    --panel:#ffffff;
+    --accent:#c79a52;
+    --accent-dark:#a87f3f;
+    --accent-bright:#a8763a;
+    --line:rgba(30,25,15,.1);
+    --radius:18px;
+    --shadow:0 24px 60px -24px rgba(30,25,15,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.6;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding-left:24px;padding-right:24px;width:100%}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:.01em;line-height:1.18;color:var(--ink);font-size:clamp(1.9rem,4.2vw,2.7rem)}
+  p.lead{font-size:1.08rem;color:var(--ink-soft)}
+  header{padding:22px 0 30px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;justify-content:center}
+  .brand img{height:52px;width:auto}
+
+  main{flex:1;display:flex;align-items:center;padding:70px 0}
+  .confirm-card{
+    max-width:600px;margin:0 auto;text-align:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:24px;
+    padding:56px 44px;box-shadow:var(--shadow);
+  }
+  .confirm-card h1{margin:0 auto 18px}
+  .confirm-card p.lead{margin:0 auto 8px;max-width:440px;margin-left:auto;margin-right:auto}
+
+  footer{padding:34px 0;text-align:center;color:var(--ink-soft);font-size:.85rem}
+  footer a{color:var(--ink-soft);text-decoration:none;margin:0 12px}
+
+  @media (max-width:600px){
+    .confirm-card{padding:44px 26px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="https://lp.abouelela.com/wp-content/uploads/2026/03/abouelela_logo_cmyk.png" alt="abouelela">
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="confirm-card">
+      <h1>Bestätigt!</h1>
+      <p class="lead">Deine Anmeldung zum Newsletter ist jetzt bestätigt. Schön, dass du dabei bist.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <a href="https://abouelela.com/impressum" target="_blank" rel="noopener">Impressum</a>
+  <a href="https://abouelela.com/datenschutz" target="_blank" rel="noopener">Datenschutz</a>
+</footer>
+
+</body>
+</html>
