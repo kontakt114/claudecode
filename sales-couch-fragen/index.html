@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Reel-Fragen</title>
+<meta name="description" content="Fragen-Generator für Reels nach dem Prinzip: dokumentieren statt erfinden. Für Tarek und Die Sales Couch.">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Reel-Fragen">
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0a0c'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23d4af6a'%3E%3F%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" id="touchicon" href="">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --panel:#131317;
+    --panel-2:#1a1a20;
+    --ink:#f3efe6;
+    --ink-soft:#a9a497;
+    --ink-faint:#6f6b62;
+    --accent:#d4af6a;
+    --accent-ink:#1a1408;
+    --good:#5fb88a;
+    --bad:#e08a7e;
+    --line:rgba(212,175,106,.16);
+    --line-strong:rgba(212,175,106,.38);
+    --radius:16px;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,textarea,input{font:inherit;color:inherit}
+  button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+  .wrap{
+    max-width:560px;
+    margin:0 auto;
+    padding:calc(18px + var(--safe-top)) 16px calc(40px + var(--safe-bottom));
+  }
+
+  /* Kopf */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+  .brand small{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .brand h1{font-family:Georgia,"Times New Roman",serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:-.01em}
+  .icon-btn{
+    flex:none;width:44px;height:44px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--line);
+    display:grid;place-items:center;color:var(--ink-soft);
+  }
+  .icon-btn:active{transform:scale(.96)}
+  .icon-btn svg{width:20px;height:20px}
+
+  .claim{color:var(--ink-soft);font-size:15px;margin-bottom:20px}
+
+  /* Filter */
+  .filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 16px;padding:0 16px}
+  .filters::-webkit-scrollbar{display:none}
+  .chip{
+    flex:none;padding:9px 15px;border-radius:999px;font-size:14px;font-weight:500;
+    background:var(--panel);border:1px solid var(--line);color:var(--ink-soft);
+  }
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+  /* Eingabe */
+  label.field{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:6px}
+  textarea{
+    width:100%;min-height:74px;resize:vertical;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;font-size:16px;line-height:1.4;
+  }
+  textarea::placeholder,input::placeholder{color:var(--ink-faint)}
+  textarea:focus,input:focus{outline:none;border-color:var(--line-strong)}
+
+  .primary{
+    width:100%;margin-top:14px;padding:15px 18px;border:0;border-radius:14px;
+    background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:16px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .primary:active{transform:scale(.99)}
+  .primary[disabled]{opacity:.7;cursor:default}
+  .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(26,20,8,.25);border-top-color:var(--accent-ink);animation:spin .8s linear infinite;display:none}
+  .loading .spinner{display:block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Hinweise */
+  .notice{
+    margin-top:14px;padding:11px 14px;border-radius:12px;font-size:14px;
+    background:var(--panel);border:1px solid var(--line);color:var(--ink-soft);
+  }
+  .notice.error{border-color:rgba(224,138,126,.4);color:var(--bad)}
+  .notice button{background:none;border:0;color:var(--accent);text-decoration:underline;padding:0;font-size:14px}
+  [hidden]{display:none !important}
+
+  /* Fragen */
+  .list{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 16px 12px;animation:rise .35s ease both;
+  }
+  .card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.12s}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .card p{font-family:Georgia,"Times New Roman",serif;font-size:19px;line-height:1.4}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+  .tag{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+  .actions{display:flex;gap:6px}
+  .act{
+    width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);
+    display:grid;place-items:center;color:var(--ink-soft);
+  }
+  .act svg{width:18px;height:18px}
+  .act.on{color:var(--accent);border-color:var(--line-strong)}
+  .act.ok{color:var(--good)}
+
+  .skeleton{height:118px;border-radius:var(--radius);background:linear-gradient(90deg,var(--panel) 0%,var(--panel-2) 50%,var(--panel) 100%);background-size:200% 100%;animation:shimmer 1.2s linear infinite;border:1px solid var(--line)}
+  @keyframes shimmer{to{background-position:-200% 0}}
+
+  /* Gemerkt */
+  section.saved{margin-top:34px}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .section-head h2{font-family:Georgia,"Times New Roman",serif;font-weight:600;font-size:20px}
+  .count{font-size:13px;color:var(--ink-faint)}
+  .empty{color:var(--ink-faint);font-size:14px;padding:14px 0}
+  .saved .card p{font-size:17px}
+
+  /* Dialog */
+  dialog{
+    margin:auto;width:min(520px,calc(100% - 32px));
+    background:var(--panel);color:var(--ink);border:1px solid var(--line-strong);border-radius:18px;padding:20px;
+  }
+  dialog::backdrop{background:rgba(0,0,0,.65)}
+  dialog h2{font-family:Georgia,"Times New Roman",serif;font-weight:600;font-size:21px;margin-bottom:6px}
+  dialog p{color:var(--ink-soft);font-size:14px;margin-bottom:14px}
+  dialog a{color:var(--accent)}
+  dialog input{
+    width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-size:16px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .btn{flex:1;min-width:120px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);font-weight:600;font-size:15px}
+  .btn.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .btn.danger{color:var(--bad)}
+  .meta{margin-top:14px;font-size:12px;color:var(--ink-faint)}
+
+  .toast{
+    position:fixed;left:50%;bottom:calc(20px + var(--safe-bottom));transform:translate(-50%,20px);
+    background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;
+    opacity:0;pointer-events:none;transition:.25s;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <small>Die Sales Couch</small>
+      <h1>Was war heute?</h1>
+    </div>
+    <button class="icon-btn" id="openSettings" aria-label="Einstellungen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+  </header>
+
+  <p class="claim">Nicht ausdenken. Aufschreiben. Dein Tag hat den Content schon.</p>
+
+  <div class="filters" role="group" aria-label="Themenfeld">
+    <button class="chip" data-topic="Alle" aria-pressed="true">Alle</button>
+    <button class="chip" data-topic="Trainerleben" aria-pressed="false">Trainerleben</button>
+    <button class="chip" data-topic="Selbstständigkeit" aria-pressed="false">Selbstständigkeit</button>
+    <button class="chip" data-topic="Sales" aria-pressed="false">Sales</button>
+  </div>
+
+  <label class="field" for="today">Was war heute los? <span style="color:var(--ink-faint)">(optional, Stichworte)</span></label>
+  <textarea id="today" placeholder="z. B. Seminar in Köln, Teilnehmer skeptisch, Kunde sagt: zu teuer"></textarea>
+
+  <button class="primary" id="generate">
+    <span class="spinner" aria-hidden="true"></span>
+    <span id="generateLabel">Neue Fragen</span>
+  </button>
+
+  <div class="notice" id="notice" role="status" hidden></div>
+
+  <div class="list" id="questions" aria-live="polite"></div>
+
+  <section class="saved">
+    <div class="section-head">
+      <h2>Gemerkt</h2>
+      <span class="count" id="savedCount"></span>
+    </div>
+    <div class="list" id="savedList" style="margin-top:0"></div>
+  </section>
+</div>
+
+<dialog id="settings">
+  <form method="dialog" id="settingsForm">
+    <h2>API-Key</h2>
+    <p>Der Key bleibt nur in diesem Browser gespeichert. Anlegen kannst du ihn in der <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Claude Console</a>. Ohne Key kommen Fragen aus dem festen Pool.</p>
+    <input id="keyInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-ant-...">
+    <div class="row">
+      <button type="button" class="btn main" id="saveKey">Speichern</button>
+      <button type="button" class="btn danger" id="deleteKey">Key löschen</button>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="clearHistory">Verlauf leeren</button>
+      <button type="button" class="btn" id="closeSettings">Schließen</button>
+    </div>
+    <div class="meta" id="settingsMeta"></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   KONFIGURATION – hier anpassen
+   ===================================================================== */
+
+// Modell. Austauschbar, z. B. "claude-haiku-4-5" (schneller, günstiger)
+// oder "claude-sonnet-5" (besserer Ton).
+const MODEL = "claude-sonnet-5";
+
+const API_URL = "https://api.anthropic.com/v1/messages";
+const API_VERSION = "2023-06-01";
+const MAX_TOKENS = 4000;
+const QUESTIONS_PER_ROUND = 3;
+const HISTORY_LIMIT = 50;
+
+// System-Prompt für die Generierung.
+const SYSTEM_PROMPT = `Du erzeugst Fragen, die einem Sales-Trainer und Selbstständigen helfen, aus seinem heutigen Tag Content für Reels zu gewinnen. Prinzip: dokumentieren statt erfinden. Jede Frage zielt auf einen konkreten Moment, ein Erlebnis, eine Entscheidung oder einen Gedanken von heute.
+
+Stil: kurz, direkt, Du-Ansprache, maximal ein bis zwei Sätze. Gern mit paradoxer Wendung, die eine Erwartung aufbaut und bricht. Keine Coaching-Floskeln, kein Marketingsprech, keine Füllwörter, keine Ja/Nein-Fragen.
+
+Beispiele für den gewünschten Ton:
+- "Welcher Moment heute war typisch Trainerleben – und keiner sieht ihn?"
+- "Welches Nein hast du heute gehört? Was hast du daraus gemacht?"
+- "Welcher Einwand kam heute schon wieder?"
+- "Wo hast du heute zwischen Umsatz und Haltung entschieden?"
+- "Was hast du heute gelernt, das du vor zehn Jahren gebraucht hättest?"
+- "Welcher Fehler von heute ist ein guter Reel?"
+- "Was machen alle falsch – und du heute auch?"
+
+Gib ausschließlich JSON zurück: {"questions": [{"text": "...", "topic": "Trainerleben|Selbstständigkeit|Sales"}]}`;
+
+// Themenfelder (für den Nutzer-Prompt).
+const TOPICS = {
+  "Trainerleben": "Seminare, Teilnehmer, Reisen, Bühne, Vorbereitung",
+  "Selbstständigkeit": "Freiheit, Druck, Entscheidungen, Rückschläge",
+  "Sales": "Einwände, Abschlüsse, Neins, Kundengespräche, Haltung"
+};
+
+// Fallback-Pool: 20 Fragen pro Themenfeld.
+const POOL = {
+  "Trainerleben": [
+    "Welcher Moment heute war typisch Trainerleben – und keiner sieht ihn?",
+    "Welcher Teilnehmer hat dich heute überrascht? Womit?",
+    "Was hast du heute im Seminar gesagt, das du selbst noch üben musst?",
+    "Wo warst du heute Trainer – und eigentlich Schüler?",
+    "Welche Frage aus dem Seminar geht dir heute nicht aus dem Kopf?",
+    "Was hast du heute vorbereitet – und dann komplett anders gemacht?",
+    "Welcher Satz hat heute im Raum etwas verändert?",
+    "Was denkst du heute Abend im Hotelzimmer, das du im Seminar nie sagen würdest?",
+    "Wann hast du heute gemerkt, dass dir der Raum entgleitet? Was hast du dann gemacht?",
+    "Welcher Teilnehmer wollte heute nicht da sein – und wie war er am Ende?",
+    "Was passiert zehn Minuten vor dem Seminar, das keiner mitbekommt?",
+    "Welche Übung ist heute gescheitert? Was hat sie trotzdem gezeigt?",
+    "Was ging dir heute auf dem Weg zum Kunden durch den Kopf?",
+    "Welcher Moment auf der Bühne war heute leise statt laut?",
+    "Was hat dich heute im Seminar mehr Kraft gekostet als gedacht?",
+    "Welches Feedback von heute arbeitet noch in dir? Warum?",
+    "Was hast du heute zum hundertsten Mal erklärt – und zum ersten Mal anders?",
+    "Wo hast du heute improvisiert, und keiner hat es gemerkt?",
+    "Was nimmst du aus dem Seminar heute für dich mit – nicht für die Teilnehmer?",
+    "Welcher Blick eines Teilnehmers hat dir heute mehr gesagt als jeder Feedbackbogen?"
+  ],
+  "Selbstständigkeit": [
+    "Wo hast du heute zwischen Umsatz und Haltung entschieden?",
+    "Welche Freiheit hat dich heute etwas gekostet?",
+    "Wozu hast du heute Nein gesagt, um zu etwas anderem Ja zu sagen?",
+    "Welche Entscheidung hast du heute allein getroffen – und wem hättest du sie gern abgegeben?",
+    "Woran genau hast du heute gezweifelt?",
+    "Welcher Rückschlag von heute ist in einem Jahr eine gute Geschichte?",
+    "Was hast du heute gelernt, das du vor zehn Jahren gebraucht hättest?",
+    "Wann hast du heute gearbeitet, obwohl du frei hattest – oder frei gemacht, obwohl Arbeit da war?",
+    "Welche Zahl hat heute deine Laune bestimmt?",
+    "Wofür hattest du heute keine Zeit – und warum eigentlich nicht?",
+    "Was hat dich heute keiner gefragt, obwohl du die Antwort parat hattest?",
+    "Welche Aufgabe hast du heute vor dir hergeschoben? Was sagt das über dich?",
+    "Welcher Moment heute hat sich nach Freiheit angefühlt?",
+    "Was hättest du heute abgeben sollen – und hast es trotzdem selbst gemacht?",
+    "Wo warst du heute dein eigener schlechtester Chef?",
+    "Welcher Anruf hat heute deinen Plan umgeworfen?",
+    "Was machen alle Selbstständigen falsch – und du heute auch?",
+    "Welcher Druck kam heute von außen – und welcher von dir selbst?",
+    "Welches Risiko bist du heute eingegangen, das von außen keiner sieht?",
+    "Worauf bist du heute stolz, obwohl es keiner bezahlt?"
+  ],
+  "Sales": [
+    "Welches Nein hast du heute gehört? Was hast du daraus gemacht?",
+    "Welcher Einwand kam heute schon wieder?",
+    "Welcher Fehler von heute ist ein guter Reel?",
+    "Was machen alle im Verkauf falsch – und du heute auch?",
+    "Welcher Satz hat heute einen Abschluss gebracht – oder verhindert?",
+    "Wo hast du heute zu früh über den Preis gesprochen?",
+    "An welcher Stelle ist dir heute ein Kundengespräch aus dem Plan gelaufen?",
+    "Wann hast du heute zugehört statt verkauft – und dadurch mehr verkauft?",
+    "Welche Frage eines Kunden hat dich heute kurz sprachlos gemacht?",
+    "Wo hast du heute nicht nachgefasst? Warum nicht?",
+    "Welcher Kunde hat heute Nein gesagt und Ja gemeint?",
+    "Welche Idee hast du heute verkauft, ohne dass Geld geflossen ist?",
+    "Welchen Deal hast du heute bewusst liegen lassen?",
+    "Wo hat dich deine Haltung heute Geld gekostet – und was hat sie dir gebracht?",
+    "Welche Ausrede eines Kunden war heute eigentlich deine eigene?",
+    "In welchem Moment ist heute im Gespräch die eigentliche Entscheidung gefallen?",
+    "Was hat dir heute jemand verkauft – und wie hat er es gemacht?",
+    "Welche Stille im Gespräch hat heute mehr gebracht als jedes Argument?",
+    "Welcher Einwand heute war in Wahrheit gar keiner?",
+    "Was würdest du dem Verkäufer sagen, der du heute Morgen warst?"
+  ]
+};
+
+/* =====================================================================
+   Speicher
+   ===================================================================== */
+const LS = { key: "rf_api_key", history: "rf_history", saved: "rf_saved", topic: "rf_topic" };
+
+function load(name, fallback) {
+  try { const v = localStorage.getItem(name); return v === null ? fallback : JSON.parse(v); }
+  catch { return fallback; }
+}
+function store(name, value) {
+  try { localStorage.setItem(name, JSON.stringify(value)); } catch {}
+}
+function getKey() { return load(LS.key, ""); }
+function setKey(k) { if (k) store(LS.key, k); else { try { localStorage.removeItem(LS.key); } catch {} } }
+
+const norm = s => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+
+function addToHistory(questions) {
+  const history = load(LS.history, []);
+  for (const q of questions) {
+    const i = history.findIndex(h => norm(h) === norm(q.text));
+    if (i >= 0) history.splice(i, 1);
+    history.push(q.text);
+  }
+  store(LS.history, history.slice(-HISTORY_LIMIT));
+}
+
+/* =====================================================================
+   Claude-API
+   ===================================================================== */
+class ApiError extends Error {
+  constructor(message, kind) { super(message); this.kind = kind; }
+}
+
+function buildUserPrompt(topic, today, history, retryNote) {
+  const lines = [];
+  if (topic === "Alle") {
+    lines.push(`Erzeuge genau ${QUESTIONS_PER_ROUND} Fragen, verteilt auf die Themenfelder:`);
+    for (const [t, d] of Object.entries(TOPICS)) lines.push(`- ${t} (${d})`);
+    lines.push("Möglichst jede Frage aus einem anderen Themenfeld.");
+  } else {
+    lines.push(`Erzeuge genau ${QUESTIONS_PER_ROUND} Fragen, alle zum Themenfeld "${topic}" (${TOPICS[topic]}).`);
+    lines.push(`Setze "topic" bei jeder Frage auf "${topic}".`);
+  }
+  if (today) {
+    lines.push("", "Das war heute los (Stichworte von Tarek):", today,
+      "Schneide die Fragen auf diese Stichworte zu. Greif konkrete Details auf, ohne sie nur zu wiederholen.");
+  }
+  if (history.length) {
+    lines.push("", "Diese Fragen gab es schon. Wiederhole keine davon und formuliere keine nur um – neue Blickwinkel:");
+    for (const h of history) lines.push(`- ${h}`);
+  }
+  if (retryNote) lines.push("", retryNote);
+  lines.push("", "Antworte nur mit dem JSON-Objekt, ohne Codeblock, ohne Erklärung.");
+  return lines.join("\n");
+}
+
+async function callClaude(userPrompt) {
+  const key = getKey();
+  if (!key) throw new ApiError("Kein API-Key hinterlegt.", "nokey");
+  if (!navigator.onLine) throw new ApiError("Keine Internetverbindung.", "offline");
+
+  let res;
+  try {
+    res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": API_VERSION,
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userPrompt }]
+      })
+    });
+  } catch {
+    throw new ApiError("Keine Verbindung zur Claude-API. Prüf dein Internet.", "offline");
+  }
+
+  if (!res.ok) {
+    let detail = "";
+    try { detail = (await res.json())?.error?.message || ""; } catch {}
+    const map = {
+      400: ["Die Anfrage wurde abgelehnt" + (detail ? `: ${detail}` : "."), "bad"],
+      401: ["Der API-Key ist ungültig. Prüf ihn in den Einstellungen.", "auth"],
+      403: ["Der API-Key hat keine Berechtigung für dieses Modell.", "auth"],
+      404: [`Das Modell „${MODEL}“ wurde nicht gefunden.`, "bad"],
+      413: ["Die Anfrage ist zu groß. Leere den Verlauf in den Einstellungen.", "bad"],
+      429: ["Zu viele Anfragen oder Guthaben aufgebraucht. Kurz warten oder Guthaben in der Console prüfen.", "rate"],
+      529: ["Claude ist gerade überlastet. Gleich nochmal versuchen.", "server"]
+    };
+    const [msg, kind] = map[res.status] || (res.status >= 500
+      ? ["Die Claude-API hat gerade ein Problem. Gleich nochmal versuchen.", "server"]
+      : [`Unerwarteter Fehler (${res.status})${detail ? `: ${detail}` : "."}`, "bad"]);
+    throw new ApiError(msg, kind);
+  }
+
+  const data = await res.json();
+  if (data.stop_reason === "refusal") throw new ApiError("Die Anfrage wurde vom Modell abgelehnt.", "bad");
+  return (data.content || []).filter(b => b.type === "text").map(b => b.text).join("");
+}
+
+// Prüft die Modellantwort. Gibt die gültigen Fragen zurück oder null.
+function parseQuestions(raw, topic, history) {
+  if (!raw) return null;
+  let text = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
+  const start = text.indexOf("{"), end = text.lastIndexOf("}");
+  if (start < 0 || end <= start) return null;
+  let obj;
+  try { obj = JSON.parse(text.slice(start, end + 1)); } catch { return null; }
+  if (!obj || !Array.isArray(obj.questions)) return null;
+
+  const seen = new Set(history.map(norm));
+  const out = [];
+  for (const q of obj.questions) {
+    if (!q || typeof q.text !== "string") continue;
+    const t = q.text.trim();
+    if (t.length < 8 || t.length > 260) continue;
+    if (seen.has(norm(t))) continue;
+    let tp = typeof q.topic === "string" ? q.topic.trim() : "";
+    if (!TOPICS[tp]) {
+      if (topic !== "Alle") tp = topic; else continue;
+    }
+    if (topic !== "Alle" && tp !== topic) continue;
+    seen.add(norm(t));
+    out.push({ text: t, topic: tp });
+  }
+  return out.length >= QUESTIONS_PER_ROUND ? out.slice(0, QUESTIONS_PER_ROUND) : null;
+}
+
+async function generateFromApi(topic, today) {
+  const history = load(LS.history, []);
+  const first = await callClaude(buildUserPrompt(topic, today, history));
+  let qs = parseQuestions(first, topic, history);
+  if (qs) return qs;
+
+  // Ein automatischer zweiter Versuch bei ungültigem Format.
+  const retry = await callClaude(buildUserPrompt(topic, today, history,
+    `Achtung: Die letzte Antwort war kein gültiges JSON im geforderten Format. Liefere exakt {"questions":[{"text":"...","topic":"..."}]} mit ${QUESTIONS_PER_ROUND} neuen Fragen.`));
+  qs = parseQuestions(retry, topic, history);
+  if (qs) return qs;
+  throw new ApiError("Die Antwort hatte zweimal ein ungültiges Format.", "format");
+}
+
+/* =====================================================================
+   Fallback-Pool
+   ===================================================================== */
+function shuffle(a) {
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function fromPool(topic) {
+  const recent = new Set(load(LS.history, []).map(norm));
+  const topics = topic === "Alle" ? shuffle(Object.keys(POOL)) : [topic, topic, topic];
+  const picked = [];
+  const used = new Set();
+  for (const t of topics) {
+    const fresh = shuffle(POOL[t]).filter(q => !used.has(q));
+    const q = fresh.find(q => !recent.has(norm(q))) || fresh[0];
+    used.add(q);
+    picked.push({ text: q, topic: t });
+  }
+  return picked;
+}
+
+/* =====================================================================
+   Oberfläche
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const els = {
+  generate: $("generate"), label: $("generateLabel"), notice: $("notice"),
+  questions: $("questions"), savedList: $("savedList"), savedCount: $("savedCount"),
+  today: $("today"), dialog: $("settings"), keyInput: $("keyInput"), meta: $("settingsMeta"), toast: $("toast")
+};
+
+const ICONS = {
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg>',
+  starOn: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>'
+};
+
+let activeTopic = load(LS.topic, "Alle");
+if (!POOL[activeTopic] && activeTopic !== "Alle") activeTopic = "Alle";
+let current = [];
+
+function toast(msg) {
+  els.toast.textContent = msg;
+  els.toast.classList.add("show");
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => els.toast.classList.remove("show"), 1600);
+}
+
+function showNotice(html, isError) {
+  els.notice.innerHTML = html;
+  els.notice.classList.toggle("error", !!isError);
+  els.notice.hidden = !html;
+  const btn = els.notice.querySelector("[data-open-settings]");
+  if (btn) btn.onclick = openSettings;
+}
+
+async function copyText(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch {}
+    ta.remove();
+  }
+  btn.innerHTML = ICONS.check; btn.classList.add("ok");
+  setTimeout(() => { btn.innerHTML = ICONS.copy; btn.classList.remove("ok"); }, 1300);
+  toast("Kopiert");
+}
+
+function isSaved(text) { return load(LS.saved, []).some(s => s.text === text); }
+
+function toggleSaved(q) {
+  let saved = load(LS.saved, []);
+  if (saved.some(s => s.text === q.text)) {
+    saved = saved.filter(s => s.text !== q.text);
+    toast("Entfernt");
+  } else {
+    saved.unshift({ text: q.text, topic: q.topic, at: Date.now() });
+    toast("Gemerkt");
+  }
+  store(LS.saved, saved);
+  renderQuestions(); renderSaved();
+}
+
+function card(q, mode) {
+  const el = document.createElement("article");
+  el.className = "card";
+  const p = document.createElement("p"); p.textContent = q.text;
+  const foot = document.createElement("div"); foot.className = "card-foot";
+  const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = q.topic;
+  const actions = document.createElement("div"); actions.className = "actions";
+
+  const copy = document.createElement("button");
+  copy.className = "act"; copy.innerHTML = ICONS.copy; copy.setAttribute("aria-label", "Frage kopieren");
+  copy.onclick = () => copyText(q.text, copy);
+  actions.append(copy);
+
+  if (mode === "saved") {
+    const del = document.createElement("button");
+    del.className = "act"; del.innerHTML = ICONS.trash; del.setAttribute("aria-label", "Aus Gemerkt löschen");
+    del.onclick = () => toggleSaved(q);
+    actions.append(del);
+  } else {
+    const on = isSaved(q.text);
+    const star = document.createElement("button");
+    star.className = "act" + (on ? " on" : "");
+    star.innerHTML = on ? ICONS.starOn : ICONS.star;
+    star.setAttribute("aria-label", on ? "Nicht mehr merken" : "Frage merken");
+    star.setAttribute("aria-pressed", String(on));
+    star.onclick = () => toggleSaved(q);
+    actions.append(star);
+  }
+
+  foot.append(tag, actions);
+  el.append(p, foot);
+  return el;
+}
+
+function renderQuestions() {
+  els.questions.replaceChildren(...current.map(q => card(q, "new")));
+}
+
+function renderSaved() {
+  const saved = load(LS.saved, []);
+  els.savedCount.textContent = saved.length ? `${saved.length}` : "";
+  if (!saved.length) {
+    const e = document.createElement("p"); e.className = "empty";
+    e.textContent = "Noch nichts gemerkt. Tipp auf den Stern bei einer Frage.";
+    els.savedList.replaceChildren(e);
+  } else {
+    els.savedList.replaceChildren(...saved.map(q => card(q, "saved")));
+  }
+}
+
+function renderFilters() {
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.topic === activeTopic)));
+}
+
+function setLoading(on) {
+  els.generate.disabled = on;
+  els.generate.classList.toggle("loading", on);
+  els.label.textContent = on ? "Fragen werden erzeugt …" : "Neue Fragen";
+  if (on) {
+    els.questions.replaceChildren(...Array.from({ length: QUESTIONS_PER_ROUND }, () => {
+      const s = document.createElement("div"); s.className = "skeleton"; return s;
+    }));
+  }
+}
+
+async function generate() {
+  const topic = activeTopic;
+  const today = els.today.value.trim();
+  showNotice("");
+
+  if (!getKey()) {
+    current = fromPool(topic);
+    addToHistory(current);
+    renderQuestions();
+    showNotice('Fragen aus dem festen Pool – kein API-Key hinterlegt. <button type="button" data-open-settings>Key eintragen</button>');
+    return;
+  }
+
+  setLoading(true);
+  try {
+    current = await generateFromApi(topic, today);
+    addToHistory(current);
+  } catch (err) {
+    current = fromPool(topic);
+    addToHistory(current);
+    const msg = err instanceof ApiError ? err.message : "Unerwarteter Fehler.";
+    const link = err.kind === "auth" ? ' <button type="button" data-open-settings>Einstellungen öffnen</button>' : "";
+    showNotice(`${escapeHtml(msg)}${link}<br>Hier drei Fragen aus dem festen Pool.`, true);
+  } finally {
+    setLoading(false);
+    renderQuestions();
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+/* Einstellungen */
+function openSettings() {
+  const k = getKey();
+  els.keyInput.value = "";
+  els.keyInput.placeholder = k ? `Gespeichert: …${k.slice(-4)}` : "sk-ant-...";
+  els.meta.textContent = `Modell: ${MODEL} · Verlauf: ${load(LS.history, []).length}/${HISTORY_LIMIT} Fragen`;
+  if (typeof els.dialog.showModal === "function") els.dialog.showModal();
+  else els.dialog.setAttribute("open", "");
+}
+function closeSettings() {
+  if (typeof els.dialog.close === "function") els.dialog.close(); else els.dialog.removeAttribute("open");
+}
+
+$("openSettings").onclick = openSettings;
+$("closeSettings").onclick = closeSettings;
+$("saveKey").onclick = () => {
+  const v = els.keyInput.value.trim();
+  if (!v) { els.keyInput.focus(); return; }
+  if (!v.startsWith("sk-ant-")) { toast("Der Key beginnt normalerweise mit sk-ant-"); }
+  setKey(v);
+  closeSettings();
+  showNotice("");
+  toast("Key gespeichert");
+};
+$("deleteKey").onclick = () => {
+  setKey("");
+  els.keyInput.value = "";
+  els.keyInput.placeholder = "sk-ant-...";
+  toast("Key gelöscht");
+};
+$("clearHistory").onclick = () => {
+  store(LS.history, []);
+  els.meta.textContent = `Modell: ${MODEL} · Verlauf: 0/${HISTORY_LIMIT} Fragen`;
+  toast("Verlauf geleert");
+};
+els.keyInput.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("saveKey").click(); } });
+
+document.querySelectorAll(".chip").forEach(c => c.onclick = () => {
+  activeTopic = c.dataset.topic;
+  store(LS.topic, activeTopic);
+  renderFilters();
+});
+els.generate.onclick = generate;
+
+/* Homescreen-Icon als PNG erzeugen (iOS braucht PNG) */
+(function makeTouchIcon() {
+  try {
+    const c = document.createElement("canvas"); c.width = c.height = 180;
+    const x = c.getContext("2d");
+    x.fillStyle = "#0a0a0c"; x.fillRect(0, 0, 180, 180);
+    x.strokeStyle = "rgba(212,175,106,.35)"; x.lineWidth = 4; x.strokeRect(14, 14, 152, 152);
+    x.fillStyle = "#d4af6a"; x.font = "700 118px Georgia, serif"; x.textAlign = "center"; x.textBaseline = "middle";
+    x.fillText("?", 90, 98);
+    $("touchicon").href = c.toDataURL("image/png");
+  } catch {}
+})();
+
+/* Start */
+renderFilters();
+renderSaved();
+if (!getKey()) openSettings();
+</script>
+</body>
+</html>
