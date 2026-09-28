@@ -3,7 +3,7 @@
 Ein Fragen-Generator für Reels. Prinzip: dokumentieren statt erfinden.
 Du denkst dir kein Thema aus. Du beantwortest eine Frage zu deinem Tag.
 
-Alles steckt in einer Datei: `index.html`. Kein Server, keine Installation.
+Alles steckt in einer Datei: `reel-fragen.html`. Kein Server, keine Installation.
 
 ---
 
@@ -21,7 +21,7 @@ Tipp: Unter **Settings → Limits** kannst du ein monatliches Ausgabenlimit setz
 
 ## 2. Datei öffnen
 
-**Am Rechner:** Doppelklick auf `index.html`. Sie öffnet sich im Browser.
+**Am Rechner:** Doppelklick auf `reel-fragen.html`. Sie öffnet sich im Browser.
 
 **Beim ersten Start** fragt die Seite nach dem API-Key. Einfügen, **Speichern**, fertig.
 Ohne Key läuft die Seite trotzdem – dann kommen die Fragen aus einem festen Pool von 60 Fragen.
@@ -30,8 +30,8 @@ Ohne Key läuft die Seite trotzdem – dann kommen die Fragen aus einem festen P
 
 **Aufs Handy bringen:** Damit „Zum Homescreen“ sauber klappt, sollte die Datei über eine Web-Adresse erreichbar sein, nicht als lokale Datei. Einfache Wege:
 
-- **GitHub Pages:** Repository → **Settings → Pages** → Branch auswählen → speichern. Danach ist die Seite unter `https://<nutzername>.github.io/<repo>/sales-couch-fragen/` erreichbar.
-- **Netlify Drop:** [app.netlify.com/drop](https://app.netlify.com/drop) öffnen und den Ordner `sales-couch-fragen` hineinziehen. Du bekommst sofort eine Adresse.
+- **GitHub Pages:** Repository → **Settings → Pages** → Branch auswählen → speichern. Danach ist die Seite unter `https://<nutzername>.github.io/<repo>/sales-couch-fragen/reel-fragen.html` erreichbar.
+- **Netlify Drop:** [app.netlify.com/drop](https://app.netlify.com/drop) öffnen und den Ordner `sales-couch-fragen` hineinziehen. Du bekommst sofort eine Adresse. Häng `/reel-fragen.html` an, sonst zeigt sie eine leere Fehlerseite.
 - Oder die Datei auf die eigene Website hochladen.
 
 Die Seite enthält keinen Key. Du kannst sie also öffentlich hosten. Den Key trägst du dann auf dem Handy einmal selbst ein.
@@ -57,7 +57,7 @@ Hinweis: Der Homescreen-Eintrag hat seinen eigenen Speicher. Beim ersten Öffnen
 
 ## Anpassen
 
-Oben im `<script>`-Teil von `index.html` stehen die Stellschrauben:
+Oben im `<script>`-Teil von `reel-fragen.html` stehen die Stellschrauben:
 
 - `MODEL` – das Modell. Standard ist `claude-sonnet-5`. Für schneller und günstiger: `claude-haiku-4-5`.
 - `SYSTEM_PROMPT` – Ton und Regeln für die Fragen.
