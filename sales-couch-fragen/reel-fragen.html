@@ -393,6 +393,7 @@ function buildUserPrompt(topic, today, history, retryNote) {
 async function callClaude(userPrompt) {
   const key = getKey();
   if (!key) throw new ApiError("Kein API-Key hinterlegt.", "nokey");
+  if (/[^\x21-\x7E]/.test(key)) throw new ApiError("Der Key enthält unsichtbare oder ungültige Zeichen. Kopier ihn neu aus der Console und füg ihn erneut ein.", "auth");
   if (!navigator.onLine) throw new ApiError("Keine Internetverbindung.", "offline");
 
   let res;
@@ -412,8 +413,12 @@ async function callClaude(userPrompt) {
         messages: [{ role: "user", content: userPrompt }]
       })
     });
-  } catch {
-    throw new ApiError("Keine Verbindung zur Claude-API. Prüf dein Internet.", "offline");
+  } catch (e) {
+    const inPreview = (() => { try { return window.self !== window.top; } catch { return true; } })();
+    const hint = inPreview
+      ? " Die Seite läuft gerade in einer Vorschau, die keine Verbindungen erlaubt. Öffne die Datei direkt im Browser (Safari, Chrome)."
+      : " Prüf dein Internet. Auch Werbeblocker oder ein Firmen-Netz können die Verbindung sperren.";
+    throw new ApiError("Keine Verbindung zur Claude-API." + hint + (e && e.message ? ` (Technisch: ${e.message})` : ""), "offline");
   }
 
   if (!res.ok) {
@@ -685,8 +690,11 @@ function closeSettings() {
 $("openSettings").onclick = openSettings;
 $("closeSettings").onclick = closeSettings;
 $("saveKey").onclick = () => {
-  const v = els.keyInput.value.trim();
+  const raw = els.keyInput.value;
+  // Leerzeichen, Zeilenumbrüche und unsichtbare Zeichen aus dem Kopieren entfernen.
+  const v = raw.replace(/[^\x21-\x7E]/g, "");
   if (!v) { els.keyInput.focus(); return; }
+  if (v !== raw.trim()) toast("Unsichtbare Zeichen aus dem Key entfernt");
   if (!v.startsWith("sk-ant-")) { toast("Der Key beginnt normalerweise mit sk-ant-"); }
   setKey(v);
   closeSettings();

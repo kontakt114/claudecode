@@ -15,7 +15,7 @@ Alles steckt in einer Datei: `reel-fragen.html`. Kein Server, keine Installation
 4. Einen Namen vergeben, z. B. `Reel-Fragen`, und bestätigen.
 5. Den Key (beginnt mit `sk-ant-…`) sofort kopieren. Er wird nur einmal angezeigt.
 
-Tipp: Unter **Settings → Limits** kannst du ein monatliches Ausgabenlimit setzen. Eine Runde Fragen kostet nur Bruchteile eines Cents.
+Tipp: Unter **Settings → Limits** kannst du ein monatliches Ausgabenlimit setzen. Eine Runde Fragen kostet mit `claude-sonnet-5` etwa 1 bis 2 Cent, mit `claude-haiku-4-5` etwa 0,3 Cent.
 
 **Wichtig:** Der Key liegt nur im Browser des Geräts, auf dem du ihn einträgst (localStorage). Gib die Datei weiter – der Key geht nicht mit. Teile das Gerät nicht mit Leuten, die den Key nicht haben sollen. Wenn du den Verdacht hast, dass er in falsche Hände geraten ist: in der Console löschen und neu anlegen.
 
@@ -50,6 +50,8 @@ Die Seite enthält keinen Key. Du kannst sie also öffentlich hosten. Den Key tr
 3. **Zum Startbildschirm hinzufügen** wählen → **Hinzufügen**.
 
 Danach startet die Seite wie eine App, im Vollbild, im Dark Mode.
+
+**Fehler „Keine Verbindung zur Claude-API“?** Öffne die Datei direkt in Safari oder Chrome, nicht in einer Vorschau (z. B. in der Claude-App oder einer Mail-App). Vorschauen blockieren Verbindungen ins Internet.
 
 Hinweis: Der Homescreen-Eintrag hat seinen eigenen Speicher. Beim ersten Öffnen vom Homescreen fragt die Seite deshalb noch einmal nach dem Key.
 
