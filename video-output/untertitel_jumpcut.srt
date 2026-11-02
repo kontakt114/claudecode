@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:00,170
+So,
+
+2
+00:00:00,310 --> 00:00:01,030
+da ist jetzt hier ein Video.
+
+3
+00:00:01,210 --> 00:00:02,930
+Wir testen jetzt mal Claude Code
+
+4
+00:00:02,930 --> 00:00:05,750
+für den Schnitt von Zeugs und
+
+5
+00:00:05,750 --> 00:00:07,410
+ich bin sehr gespannt,
+
+6
+00:00:07,730 --> 00:00:08,850
+was da am Ende bei rauskommt.
