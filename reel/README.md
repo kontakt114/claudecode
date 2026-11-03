@@ -21,3 +21,7 @@ Der Ablauf und der Stil stehen in `.claude/skills/reel/SKILL.md`. Das Werkzeug i
 ## Pro Video
 
 - Video in Google Drive auf **„Jeder mit dem Link“** stellen. Nach dem Download kann die Freigabe wieder zurück.
+
+## Pausen kürzen
+
+`/pausen <Drive-Link>` kürzt jede Pause über einer Sekunde auf eine Sekunde. Das klappt für Audio und Video. Werkzeug: `audio/pausen.py`, Ablauf: `.claude/skills/pausen/SKILL.md`. Eine andere Länge gibst du im Briefing an, zum Beispiel `/pausen <Link> max 0,7 s`.
