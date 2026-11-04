@@ -13,6 +13,10 @@ Werkzeuge:
 - `python3 -I audio/transkript.py IN BASE [--prompt "Namen"]` - BASE.txt + BASE.srt
 - `python3 -I audio/extras.py chapters|clip|audiogram ...` - Kapitelmarken, Zitat-Clips, 9:16-Audiogramme (`-h`)
 
+## Fest eingetragen
+- **Host:** Gordon Schönwälder. Whisper hört den Nachnamen falsch (Schönenwälder, Schönmelder). `transkript.py` korrigiert das automatisch. In Captions immer `--fix`, in Shownotes und Clip-Texten genau so schreiben.
+- **Podcast:** hauptberuflich depressiv (klein geschrieben, wie im Intro). Audiogramm: `--show "hauptberuflich depressiv"`.
+
 Arbeitsordner: neuer Unterordner im Scratchpad. Mediendateien nie ins Repo committen.
 
 ## Ablauf
@@ -23,19 +27,19 @@ Arbeitsordner: neuer Unterordner im Scratchpad. Mediendateien nie ins Repo commi
 4. **Schneiden:** direkt in den Zielnamen `<titel>_gekuerzt.<ext>`. Danach nichts mehr umbenennen.
 5. **Kontrolle:** `pausen.py <gekuerzt> x --max 1.05 --noise <Schwelle> --dry-run`. Erwartet: praktisch 0 s gespart.
 6. **Transkript im Hintergrund** (`run_in_background`, ~1 min Rechenzeit pro 2 min Audio):
-   `transkript.py <gekuerzt> <titel>_transkript --prompt "<Host-Name, Podcast-Titel>"`
-   Immer aus der **gekürzten** Datei, damit die Zeitmarken zur Endfassung passen. Den Namen fürs `--prompt` aus früheren Transkripten oder vom User nehmen, nie raten. Die gekürzte MP3 schon vorher mit `SendUserFile` schicken.
+   `transkript.py <gekuerzt> <titel>_transkript`
+   Immer aus der **gekürzten** Datei, damit die Zeitmarken zur Endfassung passen. Host und Podcast sind fest eingetragen (siehe unten), Prompt und Namenskorrektur laufen automatisch. Für andere Gäste oder Begriffe `--prompt` ergänzen, Namen nie raten. Die gekürzte MP3 schon vorher mit `SendUserFile` schicken.
 7. **Kapitel:** Das Transkript ganz lesen. 8–12 Kapitel an inhaltlichen Wendepunkten setzen, meist dort, wo der Host selbst eine neue Frage stellt. Titel kurz, konkret, in seinen Worten. Erstes Kapitel bei 00:00. Als `kapitel.txt` (`mm:ss Titel`), dann:
    `extras.py chapters <gekuerzt> <titel>_final.<ext> kapitel.txt` schreibt ID3-Kapitel (nur MP3), das Audio wird kopiert. Mit `ffprobe -show_chapters` prüfen.
 8. **Shownotes** `<titel>_shownotes.txt`: 3 Titelvorschläge, Beschreibung (3–4 kurze Absätze, Ich-Form des Hosts, kein Werbesprech), Kapitelliste `mm:ss Titel` (Spotify macht daraus Kapitel), Feedback-Aufruf, Clip-Texte. Nichts erfinden, was nicht in der Folge vorkommt. Platzhalter für Links in `[...]`. Bei Themen wie Depression oder Krise: Hinweis auf die Telefonseelsorge (0800 111 0 111 / 0800 111 0 222).
 9. **Zitat-Clips:** 3 Stellen, 25–40 s, die ohne Kontext funktionieren: ein klarer Satz, ein Bild, eine Wendung.
    ```bash
    python3 -I audio/extras.py clip <gekuerzt> clipN.mp3 --from mm:ss --to mm:ss   # rastet auf Pausen ein
-   python3 -I reel/reel.py transcribe clipN.mp3 clipN.json --prompt "<Begriffe>"   # Wortzeiten
+   python3 -I reel/reel.py transcribe clipN.mp3 clipN.json --prompt "Gordon Schönwälder, hauptberuflich depressiv, ACT"   # Wortzeiten
    ```
    Die ersten Wörter in `clipN.json` prüfen. Beginnt der Clip mit einem Satzrest, Startzeit = Lücke vor dem ersten echten Wort, neu schneiden mit `--exact`, neu transkribieren. Dasselbe fürs Ende.
    ```bash
-   python3 -I reel/reel.py captions clipN.json clipN.ass [--fix falsch=richtig]
+   python3 -I reel/reel.py captions clipN.json clipN.ass --fix Schönenwälder=Schönwälder --fix Schönmelder=Schönwälder
    python3 -I audio/extras.py audiogram clipN.mp3 clipN.ass clipN.mp4 --show "<Podcast-Name>" --hook 'Zeile 1\NZeile 2'
    ```
    Hook: max. 2 kurze Zeilen, sagt den Kern des Clips. Ein Standbild ziehen (`ffmpeg -ss 12 -i clipN.mp4 -frames:v 1 f.png`) und ansehen.
@@ -48,7 +52,7 @@ Arbeitsordner: neuer Unterordner im Scratchpad. Mediendateien nie ins Repo commi
 
 ## Bericht
 - Pausen: Anzahl, gesparte Zeit, alte → neue Länge, längste Pause vorher, Schwelle, Stabilität ±5 dB.
-- Transkript: Zeilen, Wörter. Stellen nennen, an denen Whisper Namen unterschiedlich schreibt.
+- Transkript: Zeilen, Wörter. Stellen nennen, an denen Whisper andere Namen unterschiedlich schreibt.
 - Kapitel: die Liste. Clips: Zitat, Länge, Hook.
 - Lautheit nur messen (`ffmpeg -af ebur128=peak=true`), nicht ändern. Melden, falls weit weg von −16 LUFS.
 - Drive: was liegt im Ordner, was der User noch hochladen muss.
