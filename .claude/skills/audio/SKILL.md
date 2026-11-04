@@ -11,6 +11,7 @@ Werkzeuge:
 - `python3 -I reel/reel.py fetch FILE_ID OUT` - Drive-Datei laden
 - `python3 -I audio/pausen.py IN OUT [--max 1.0] [--noise DB] [--dry-run]` - Pausen kürzen (Details: Skill `pausen`)
 - `python3 -I audio/transkript.py IN BASE [--prompt "Namen"]` - BASE.txt + BASE.srt
+- `python3 -I audio/pdf.py TXT OUT.pdf --title ... --kapitel kapitel.txt --datum TT.MM.JJJJ --dauer mm:ss` - Transkript als PDF
 - `python3 -I audio/extras.py chapters|clip|audiogram ...` - Kapitelmarken, Zitat-Clips, 9:16-Audiogramme (`-h`)
 
 ## Fest eingetragen
@@ -43,11 +44,12 @@ Arbeitsordner: neuer Unterordner im Scratchpad. Mediendateien nie ins Repo commi
    python3 -I audio/extras.py audiogram clipN.mp3 clipN.ass clipN.mp4 --show "<Podcast-Name>" --hook 'Zeile 1\NZeile 2'
    ```
    Hook: max. 2 kurze Zeilen, sagt den Kern des Clips. Ein Standbild ziehen (`ffmpeg -ss 12 -i clipN.mp4 -frames:v 1 f.png`) und ansehen.
-10. **Drive-Ablage:** TXT-Transkript und Shownotes je mit `create_file` in `parentId`: `textContent` = Dateiinhalt (vorher komplett lesen), `contentMimeType: text/plain`, `disableConversionToGoogleType: true`. Danach `fileSize` aus der Antwort mit `wc -c` vergleichen.
-11. **Liefern:** `SendUserFile`: finale MP3, TXT, SRT, Shownotes (`attach`), die Clip-Videos (`render`).
+10. **PDF:** `pdf.py <titel>_transkript.txt <titel>_transkript.pdf --title "<Arbeitstitel aus dem Dateinamen>" --kapitel kapitel.txt --datum <Datum aus dem Dateinamen> --dauer <Länge gekürzt>`. Kopf mit Podcast, Titel, Host, Datum, Länge; Kapitelübersicht; Text in Absätzen unter den Kapiteln, Zeitmarke links. Seite 1 und 2 mit `pdftoppm -r 60 -png -f 1 -l 2` ansehen.
+11. **Drive-Ablage:** TXT-Transkript und Shownotes je mit `create_file` in `parentId`: `textContent` = Dateiinhalt (vorher komplett lesen), `contentMimeType: text/plain`, `disableConversionToGoogleType: true`. Danach `fileSize` aus der Antwort mit `wc -c` vergleichen.
+12. **Liefern:** `SendUserFile`: finale MP3, Transkript-PDF, TXT, SRT, Shownotes (`attach`), die Clip-Videos (`render`).
 
 ## Was nicht nach Drive geht
-- **MP3/Video:** Das Drive-Tool nimmt Inhalte nur inline. 40 MB Audio sind dafür zu groß, einen anderen Drive-Zugang gibt es im Container nicht. Finale MP3 und Clips legt der User selbst in den Ordner. Den Ordner-Link nennen: `https://drive.google.com/drive/folders/<parentId>`.
+- **MP3/Video:** Das Drive-Tool nimmt Inhalte nur inline. 40 MB Audio sind dafür zu groß, einen anderen Drive-Zugang gibt es im Container nicht. Finale MP3, Clips und PDF legt der User selbst in den Ordner. Das PDF ginge nur als Base64 im Aufruf, ein vertauschtes Zeichen würde es unbemerkt beschädigen. Den Ordner-Link nennen: `https://drive.google.com/drive/folders/<parentId>`.
 - **SRT:** nur auf Wunsch hochladen, wie TXT, aber mit `contentMimeType: application/x-subrip`. Sie ist etwa 1,4-mal so groß wie die TXT.
 
 ## Bericht
