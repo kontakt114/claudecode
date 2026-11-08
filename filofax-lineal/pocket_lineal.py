@@ -1,6 +1,6 @@
 """Lineal-Streifen für Filofax Pocket (Form wie Ref. 213609) als 3MF für Bambu Studio.
 Einfarbig, Skala erhaben. Erzeugt pocket_lineal.3mf.
-Drucken mit 0,16 mm Schichthöhe: ERHABEN = 2 Schichten.
+Für Profil 0.20mm Standard: Lineal 6 Schichten, Skala 2 Schichten.
 Alle Maße in mm. Parameter anpassen, dann: python3 pocket_lineal.py
 """
 import zipfile, numpy as np
@@ -10,7 +10,7 @@ from matplotlib.font_manager import FontProperties
 
 # --- Parameter ---------------------------------------------------------
 L, H, DICKE = 131.5, 32.0, 1.2      # Länge, Höhe, Dicke
-ERHABEN = 0.32                       # Skala steht so weit über (2 × 0,16 mm)
+ERHABEN = 0.4                        # Skala steht so weit über (2 × 0,2 mm)
 LOCH_D, LOCH_Y = 5.5, 5.8            # Lochdurchmesser, Lochmitte ab Unterkante
 LOCH_ABSTAND, LOCH_ANZAHL = 19.0, 6  # Pocket: 6 Ringe à 19 mm
 SCHLITZ_B = 1.8                      # Schlitz von Loch zur Unterkante
