@@ -9,7 +9,7 @@ from matplotlib.textpath import TextPath
 from matplotlib.font_manager import FontProperties
 
 # --- Parameter ---------------------------------------------------------
-L, H, DICKE = 131.5, 32.0, 1.0      # Länge, Höhe, Dicke
+L, H, DICKE = 131.5, 32.0, 1.2      # Länge, Höhe, Dicke
 ERHABEN = 0.32                       # Skala steht so weit über (2 × 0,16 mm)
 LOCH_D, LOCH_Y = 5.5, 5.8            # Lochdurchmesser, Lochmitte ab Unterkante
 LOCH_ABSTAND, LOCH_ANZAHL = 19.0, 6  # Pocket: 6 Ringe à 19 mm
@@ -17,7 +17,7 @@ SCHLITZ_B = 1.8                      # Schlitz von Loch zur Unterkante
 NULLPUNKT, SKALA_MM = 5.9, 120       # Position 0 ab linker Kante, Skalenlänge
 STRICH_B = 0.5
 L1, L5, L10 = 3.0, 4.7, 7.0          # Strichlängen mm / 5 mm / cm
-SCHRIFT_H, ZAHL_Y = 2.6, H - 10.2    # Ziffernhöhe, Ziffern-Unterkante
+SCHRIFT_H, ZAHL_Y = 3.2, H - 10.8    # Ziffernhöhe, Ziffern-Unterkante
 # ------------------------------------------------------------------------
 
 def umriss():
