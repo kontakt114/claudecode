@@ -11,7 +11,8 @@ from matplotlib.font_manager import FontProperties
 
 # --- Parameter ---------------------------------------------------------
 L, H, DICKE = 131.5, 32.0, 1.0      # Länge, Höhe, Dicke
-TIEFE = 0.4                          # Tiefe der Skala (Gravur bzw. Einlage)
+TIEFE = 0.4                          # Gravurtiefe (einfarbig)
+EINLAGE_TIEFE = DICKE                # Einlagetiefe (zweifarbig); = DICKE heißt durchgehend
 LOCH_D, LOCH_Y = 5.5, 5.8            # Lochdurchmesser, Lochmitte ab Unterkante
 LOCH_ABSTAND, LOCH_ANZAHL = 19.0, 6  # Pocket: 6 Ringe à 19 mm
 SCHLITZ_B = 1.8                      # Schlitz von Loch zur Unterkante
@@ -63,8 +64,8 @@ form = umriss() - loecher()
 koerper = Manifold.extrude(form, DICKE)
 skala_3d = Manifold.extrude(skala(), TIEFE + 1).translate([0, 0, DICKE - TIEFE])
 graviert = koerper - skala_3d
-einlage = Manifold.extrude(skala() - loecher(), TIEFE).translate([0, 0, DICKE - TIEFE])
-basis = koerper - Manifold.extrude(skala(), TIEFE + 1).translate([0, 0, DICKE - TIEFE])
+einlage = Manifold.extrude(skala() - loecher(), EINLAGE_TIEFE).translate([0, 0, DICKE - EINLAGE_TIEFE])
+basis = koerper - Manifold.extrude(skala(), EINLAGE_TIEFE + 1).translate([0, 0, DICKE - EINLAGE_TIEFE])
 
 def mesh_xml(m, oid, name):
     me = m.to_mesh()
