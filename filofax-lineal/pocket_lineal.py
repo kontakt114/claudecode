@@ -1,7 +1,6 @@
 """Lineal-Streifen für Filofax Pocket (Form wie Ref. 213609) als 3MF für Bambu Studio.
-Erzeugt zwei Dateien:
-  pocket_lineal_einfarbig.3mf  – Skala graviert, für Druck ohne AMS
-  pocket_lineal_zweifarbig.3mf – Skala als bündige Einlage (2 Teile), für AMS
+Einfarbig, Skala erhaben. Erzeugt pocket_lineal.3mf.
+Drucken mit 0,16 mm Schichthöhe: ERHABEN = 2 Schichten.
 Alle Maße in mm. Parameter anpassen, dann: python3 pocket_lineal.py
 """
 import zipfile, numpy as np
@@ -11,13 +10,12 @@ from matplotlib.font_manager import FontProperties
 
 # --- Parameter ---------------------------------------------------------
 L, H, DICKE = 131.5, 32.0, 1.0      # Länge, Höhe, Dicke
-TIEFE = 0.4                          # Gravurtiefe (einfarbig)
-EINLAGE_TIEFE = DICKE                # Einlagetiefe (zweifarbig); = DICKE heißt durchgehend
+ERHABEN = 0.32                       # Skala steht so weit über (2 × 0,16 mm)
 LOCH_D, LOCH_Y = 5.5, 5.8            # Lochdurchmesser, Lochmitte ab Unterkante
 LOCH_ABSTAND, LOCH_ANZAHL = 19.0, 6  # Pocket: 6 Ringe à 19 mm
 SCHLITZ_B = 1.8                      # Schlitz von Loch zur Unterkante
 NULLPUNKT, SKALA_MM = 5.9, 120       # Position 0 ab linker Kante, Skalenlänge
-STRICH_B = 0.45
+STRICH_B = 0.5
 L1, L5, L10 = 3.0, 4.7, 7.0          # Strichlängen mm / 5 mm / cm
 SCHRIFT_H, ZAHL_Y = 2.6, H - 10.2    # Ziffernhöhe, Ziffern-Unterkante
 # ------------------------------------------------------------------------
@@ -62,10 +60,8 @@ def loecher():
 
 form = umriss() - loecher()
 koerper = Manifold.extrude(form, DICKE)
-skala_3d = Manifold.extrude(skala(), TIEFE + 1).translate([0, 0, DICKE - TIEFE])
-graviert = koerper - skala_3d
-einlage = Manifold.extrude(skala() - loecher(), EINLAGE_TIEFE).translate([0, 0, DICKE - EINLAGE_TIEFE])
-basis = koerper - Manifold.extrude(skala(), EINLAGE_TIEFE + 1).translate([0, 0, DICKE - EINLAGE_TIEFE])
+relief = Manifold.extrude(skala() - loecher(), ERHABEN + 0.01).translate([0, 0, DICKE - 0.01])
+lineal = koerper + relief
 
 def mesh_xml(m, oid, name):
     me = m.to_mesh()
@@ -89,7 +85,5 @@ def schreibe(datei, teile):
     with zipfile.ZipFile(datei, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("[Content_Types].xml", ct); z.writestr("_rels/.rels", rels); z.writestr("3D/3dmodel.model", model)
 
-schreibe("pocket_lineal_einfarbig.3mf", [(graviert, "Lineal")])
-schreibe("pocket_lineal_zweifarbig.3mf", [(basis, "Lineal"), (einlage, "Skala")])
-for n, m in [("graviert", graviert), ("basis", basis), ("einlage", einlage)]:
-    print(n, round(m.volume(), 1), "mm³", m.status())
+schreibe("pocket_lineal.3mf", [(lineal, "Lineal")])
+print(round(lineal.volume(), 1), "mm³", lineal.status(), "Höhe", lineal.bounding_box())
